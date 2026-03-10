@@ -1,0 +1,109 @@
+﻿/* src/styles/App.css */
+
+html,
+body,
+#root {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+}
+
+.layout {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+.content-area {
+  display: flex;
+  flex: 1;
+  align-items: stretch;
+  overflow: hidden;
+}
+
+main {
+  flex: 1;
+  padding: 2rem;
+  background-color: #f9fbfd;
+  color: #0f172a;
+  overflow-y: auto;
+  min-height: 0;
+  margin-left: 0;
+}
+
+.footer {
+  background-color: #1e293b;
+  color: #ffffff;
+  text-align: center;
+  padding: 1rem;
+  flex-shrink: 0;
+}
+
+.private-theme {
+  --private-bg: #ffffff;
+  --private-text: #111111;
+  --private-surface: #ffffff;
+  --private-surface-muted: #f2f2f2;
+  --private-border: #e5e5e5;
+  --private-sidebar-bg: #ffffff;
+  --private-sidebar-text: #111111;
+  --private-sidebar-hover: #f5f5f5;
+  --private-sidebar-border: #e5e5e5;
+}
+
+.private-theme.private-theme-dark {
+  --private-bg: #000000;
+  --private-text: #f5f5f5;
+  --private-surface: #111111;
+  --private-surface-muted: #1a1a1a;
+  --private-border: #2b2b2b;
+  --private-sidebar-bg: #000000;
+  --private-sidebar-text: #f5f5f5;
+  --private-sidebar-hover: #171717;
+  --private-sidebar-border: #2b2b2b;
+}
+
+.private-theme,
+.private-theme .content-area,
+.private-theme .private-shell,
+.private-theme .private-main {
+  background: var(--private-bg);
+}
+
+.private-theme .private-main {
+  color: var(--private-text);
+  overflow-y: visible;
+  transition: background-color 0.25s ease, color 0.25s ease;
+}
+
+.private-theme .private-main h1,
+.private-theme .private-main h2,
+.private-theme .private-main h3,
+.private-theme .private-main p,
+.private-theme .private-main li,
+.private-theme .private-main label {
+  color: var(--private-text);
+}
+
+.private-theme .private-main input,
+.private-theme .private-main textarea,
+.private-theme .private-main select {
+  background: var(--private-surface);
+  color: var(--private-text);
+  border: 1px solid var(--private-border);
+  border-radius: 8px;
+  padding: 0.5rem 0.75rem;
+}
+
+.private-theme .private-main button {
+  background: var(--private-surface);
+  color: var(--private-text);
+  border: 1px solid var(--private-border);
+  border-radius: 8px;
+  padding: 0.5rem 0.75rem;
+  cursor: pointer;
+}
+
+.private-theme .private-main button:hover {
+  background: var(--private-surface-muted);
+}
