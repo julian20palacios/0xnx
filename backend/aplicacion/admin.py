@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Categoria
+from .models import Categoria, PasswordResetCode
 
 
 
@@ -53,3 +53,11 @@ class UsuarioAdmin(BaseUserAdmin):
             ),
         }),
     )
+
+
+@admin.register(PasswordResetCode)
+class PasswordResetCodeAdmin(admin.ModelAdmin):
+    list_display = ("id", "user", "code", "created_at", "expires_at", "used")
+    list_filter = ("used", "expires_at")
+    search_fields = ("user__email", "user__username", "code")
+    ordering = ("-created_at",)

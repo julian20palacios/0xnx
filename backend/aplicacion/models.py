@@ -1,5 +1,6 @@
 from django.db import models
 from django.conf import settings
+from django.utils import timezone
 
 class Categoria(models.Model):
     id_categoria = models.AutoField(primary_key=True, db_column='id_categoria')
@@ -51,3 +52,20 @@ class Usuario(AbstractBaseUser, PermissionsMixin):
     def __str__(self):
         full_name = f"{self.nombre} {self.apellido}".strip()
         return full_name or self.email
+
+
+class PasswordResetCode(models.Model):
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="password_reset_codes")
+    code = models.CharField(max_length=6)
+    created_at = models.DateTimeField(auto_now_add=True)
+    expires_at = models.DateTimeField()
+    used = models.BooleanField(default=False)
+
+    class Meta:
+        indexes = [
+            models.Index(fields=["user", "code"]),
+            models.Index(fields=["expires_at"]),
+        ]
+
+    def is_expired(self):
+        return timezone.now() >= self.expires_at

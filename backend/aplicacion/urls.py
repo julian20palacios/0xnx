@@ -1,6 +1,13 @@
 from django.urls import path, include
 from rest_framework.routers import DefaultRouter
-from .views import CategoriaViewSet, RegisterView, validar_token
+from .views import (
+    CategoriaViewSet,
+    RegisterView,
+    validar_token,
+    PasswordResetRequestView,
+    PasswordResetConfirmView,
+    PasswordResetVerifyView,
+)
 from rest_framework_simplejwt.views import (
     TokenObtainPairView,   # Vista para obtener el token JWT (login)
     TokenRefreshView,      # Vista para refrescar el token JWT (usando refresh token)
@@ -25,5 +32,10 @@ urlpatterns = [
 
     # Ruta personalizada que sirve para validar si un token es válido
     # (requiere que el token se pase en el header Authorization)
-    path('validar-token/', validar_token),  
+    path('validar-token/', validar_token),
+
+    # Recuperar contrasena
+    path('password-reset/request/', PasswordResetRequestView.as_view(), name='password_reset_request'),
+    path('password-reset/verify/', PasswordResetVerifyView.as_view(), name='password_reset_verify'),
+    path('password-reset/confirm/', PasswordResetConfirmView.as_view(), name='password_reset_confirm'),
 ]
