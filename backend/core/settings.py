@@ -26,7 +26,7 @@ INSTALLED_APPS = [
     # Terceros
     'rest_framework',
     'corsheaders',
-    'rest_framework_simplejwt.token_blacklist',  # ✅ Aquí sí está bien
+    'rest_framework_simplejwt.token_blacklist',  
 
     # Tu app
     'aplicacion',
