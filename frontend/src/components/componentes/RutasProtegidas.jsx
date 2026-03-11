@@ -2,6 +2,8 @@
   import React, { useEffect, useState } from 'react';
   import { Navigate } from 'react-router-dom';
 
+  const API_URL = import.meta.env.VITE_API_BASE_URL.replace(/\/$/, '');
+
   const RutaProtegida = ({ children }) => {
     const [autenticado, setAutenticado] = useState(null); // null = aún cargando
     const token = localStorage.getItem('access');
@@ -14,7 +16,7 @@
         }
 
         try {
-          const response = await fetch('http://localhost:8000/api/validar-token/', {
+          const response = await fetch(`${API_URL}/validar-token/`, {
             method: 'GET',
             headers: {
               'Authorization': `Bearer ${token}`
