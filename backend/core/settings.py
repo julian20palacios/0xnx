@@ -6,8 +6,11 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 # Seguridad
 SECRET_KEY = config("SECRET_KEY")
-DEBUG = config("DEBUG", cast=bool)
-ALLOWED_HOSTS = config("ALLOWED_HOSTS", cast=Csv())
+DEBUG = config("DEBUG", cast=bool, default=False)
+ALLOWED_HOSTS = config("ALLOWED_HOSTS", cast=Csv(), default="")
+RENDER_EXTERNAL_HOSTNAME = config("RENDER_EXTERNAL_HOSTNAME", default="")
+if RENDER_EXTERNAL_HOSTNAME:
+    ALLOWED_HOSTS.append(RENDER_EXTERNAL_HOSTNAME)
 
 
 # Modelo de usuario personalizado
@@ -99,6 +102,15 @@ USE_TZ = True
 
 # Archivos estáticos
 STATIC_URL = 'static/'
+STATIC_ROOT = BASE_DIR / 'staticfiles'
+STORAGES = {
+    'default': {
+        'BACKEND': 'django.core.files.storage.FileSystemStorage',
+    },
+    'staticfiles': {
+        'BACKEND': 'whitenoise.storage.CompressedManifestStaticFilesStorage',
+    },
+}
 
 # Archivos media (subidas por usuarios)
 MEDIA_URL = '/media/'
@@ -121,6 +133,7 @@ REST_FRAMEWORK = {
 
 # Configuración de CORS y CSRF dinámicamente
 CORS_ALLOW_CREDENTIALS = True
+FRONTEND_URL = config("FRONTEND_URL", default="")
 
 if DEBUG:
     CORS_ALLOWED_ORIGINS = [
@@ -132,8 +145,11 @@ if DEBUG:
         "http://127.0.0.1:5173",
     ]
 else:
-    CORS_ALLOWED_ORIGINS = ["FRONTEND_URL"]
-    CSRF_TRUSTED_ORIGINS = ["FRONTEND_URL"]
+    CORS_ALLOWED_ORIGINS = [FRONTEND_URL] if FRONTEND_URL else []
+    CSRF_TRUSTED_ORIGINS = [FRONTEND_URL] if FRONTEND_URL else []
+
+SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
+USE_X_FORWARDED_HOST = True
 
 
 
