@@ -100,6 +100,10 @@ USE_TZ = True
 # Archivos estáticos
 STATIC_URL = 'static/'
 
+# Archivos media (subidas por usuarios)
+MEDIA_URL = '/media/'
+MEDIA_ROOT = BASE_DIR / 'media'
+
 # Tipo de campo por defecto
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 

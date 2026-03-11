@@ -2,6 +2,7 @@
 import { BrowserRouter, Routes, Route, useLocation } from "react-router-dom";
 import Index from "../components/pages/Index";
 import IniciarSesion from "../components/pages/IniciarSesion";
+import RegistroUser from "../components/pages/RegistroUser";
 import AuthenticatedHome from "../components/pages/AuthenticatedHome";
 import RutaProtegida from "../components/componentes/RutasProtegidas";
 import Navbar from "../components/layout/Navbar";
@@ -75,6 +76,14 @@ const Rutas = () => (
         element={
           <Layout>
             <IniciarSesion />
+          </Layout>
+        }
+      />
+      <Route
+        path="/registro"
+        element={
+          <Layout>
+            <RegistroUser />
           </Layout>
         }
       />

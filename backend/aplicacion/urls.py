@@ -3,8 +3,10 @@ from rest_framework.routers import DefaultRouter
 from .views import (
     CategoriaViewSet,
     RegisterView,
+    RegisterFormView,
     GoogleLoginView,
     validar_token,
+    permisos_categoria,
     PasswordResetRequestView,
     PasswordResetConfirmView,
     PasswordResetVerifyView,
@@ -24,6 +26,7 @@ urlpatterns = [
 
     # Ruta para registrar nuevos usuarios
     path('register/', RegisterView.as_view(), name='register'),  
+    path('register-form/', RegisterFormView.as_view(), name='register_form'),
 
     # Ruta para iniciar sesión y obtener el par de tokens JWT (access + refresh)
     path('login/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
@@ -35,6 +38,7 @@ urlpatterns = [
     # Ruta personalizada que sirve para validar si un token es válido
     # (requiere que el token se pase en el header Authorization)
     path('validar-token/', validar_token),
+    path('permisos/categorias/', permisos_categoria),
 
     # Recuperar contrasena
     path('password-reset/request/', PasswordResetRequestView.as_view(), name='password_reset_request'),

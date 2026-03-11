@@ -93,8 +93,15 @@ const IniciarSesion = () => {
       </form>
 
       {googleClientId && (
-        <div className="google-login" ref={googleButtonRef} />
+        <div>
+          <p>Registrarse con Google o Iniciar Sesión</p>
+          <div className="google-login" ref={googleButtonRef} />
+        </div>
       )}
+
+      <div>
+        <Link to="/registro">Registrarse con formulario</Link>
+      </div>
 
       <div>
         <Link to="/recuperar-contrasena">Recuperar contrasena</Link>

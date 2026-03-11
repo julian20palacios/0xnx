@@ -39,3 +39,30 @@ class UserSerializer(serializers.ModelSerializer):
         user.save()
         return user
 
+
+class RegisterFormSerializer(serializers.ModelSerializer):
+    password2 = serializers.CharField(write_only=True)
+
+    class Meta:
+        model = User
+        fields = ('id', 'email', 'username', 'nombre', 'apellido', 'edad', 'password', 'password2')
+        extra_kwargs = {
+            'password': {'write_only': True},
+            'nombre': {'required': True},
+            'apellido': {'required': False},
+            'edad': {'required': False},
+        }
+
+    def validate(self, attrs):
+        if attrs.get('password') != attrs.get('password2'):
+            raise serializers.ValidationError({"password2": "Las contrasenas no coinciden."})
+        return attrs
+
+    def create(self, validated_data):
+        password = validated_data.pop('password')
+        validated_data.pop('password2', None)
+        user = User(**validated_data)
+        user.set_password(password)
+        user.is_staff = False
+        user.save()
+        return user

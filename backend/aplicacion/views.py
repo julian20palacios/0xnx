@@ -6,7 +6,7 @@ from .serializers import CategoriaSerializer
 
 # Vista para validar el token de acceso
 from rest_framework.decorators import api_view, permission_classes
-from rest_framework.permissions import IsAuthenticated, DjangoModelPermissions
+from rest_framework.permissions import IsAuthenticated, DjangoModelPermissions, BasePermission, SAFE_METHODS
 from rest_framework.response import Response
 
 @api_view(['GET'])
@@ -14,14 +14,41 @@ from rest_framework.response import Response
 def validar_token(request):
     return Response({'valid': True})
 
+def _categoria_permisos_por_grupo(user):
+    if not user or not user.is_authenticated:
+        return {"can_view": False, "can_add": False, "can_change": False, "can_delete": False}
+    if user.groups.filter(name="Admin").exists():
+        return {"can_view": True, "can_add": True, "can_change": True, "can_delete": True}
+    if user.groups.filter(name="User").exists():
+        return {"can_view": False, "can_add": False, "can_change": False, "can_delete": False}
+    return {"can_view": False, "can_add": False, "can_change": False, "can_delete": False}
+
+class CategoriaGroupPermissions(BasePermission):
+    def has_permission(self, request, view):
+        perms = _categoria_permisos_por_grupo(request.user)
+        if request.method in SAFE_METHODS:
+            return perms["can_view"]
+        if request.method == "POST":
+            return perms["can_add"]
+        if request.method in ("PUT", "PATCH"):
+            return perms["can_change"]
+        if request.method == "DELETE":
+            return perms["can_delete"]
+        return False
+
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def permisos_categoria(request):
+    return Response(_categoria_permisos_por_grupo(request.user))
 
 
 #Vista para el registro de usuarios de inicio de sesión
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
-from .serializers import UserSerializer
+from .serializers import UserSerializer, RegisterFormSerializer
 from django.contrib.auth import get_user_model
+from django.contrib.auth.models import Group
 from rest_framework.permissions import AllowAny
 from rest_framework_simplejwt.tokens import RefreshToken
 from django.utils import timezone
@@ -92,6 +119,13 @@ class GoogleLoginView(APIView):
             user = User(email=email, username=username, nombre=nombre, apellido=apellido)
             user.set_unusable_password()
             user.save()
+            grupo_user, _ = Group.objects.get_or_create(name="User")
+            user.groups.add(grupo_user)
+        else:
+            # Si el usuario no tiene grupos, asignarlo a User por defecto
+            if not user.groups.exists():
+                grupo_user, _ = Group.objects.get_or_create(name="User")
+                user.groups.add(grupo_user)
 
         refresh = RefreshToken.for_user(user)
         return Response(
@@ -216,7 +250,25 @@ class CategoriaViewSet(ModelViewSet):
     serializer_class = CategoriaSerializer
     # Enforce Django model permissions: view/add/change/delete for Categoria.
     # This also requires authentication by default.
-    permission_classes = [DjangoModelPermissions]
+    permission_classes = [CategoriaGroupPermissions]
 
 
-    
+class RegisterFormView(APIView):
+    permission_classes = [AllowAny]
+
+    def post(self, request):
+        serializer = RegisterFormSerializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        user = serializer.save()
+
+        grupo_user, _ = Group.objects.get_or_create(name="User")
+        user.groups.add(grupo_user)
+
+        refresh = RefreshToken.for_user(user)
+        return Response(
+            {
+                "refresh": str(refresh),
+                "access": str(refresh.access_token),
+            },
+            status=status.HTTP_201_CREATED,
+        )

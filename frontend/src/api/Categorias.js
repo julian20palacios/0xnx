@@ -21,6 +21,16 @@ export const obtenerCategorias = async () => {
   return await res.json();
 };
 
+export const obtenerPermisosCategoria = async () => {
+  const res = await fetch(`${API_URL}/permisos/categorias/`, {
+    ...defaultOptions(),
+    method: 'GET',
+  });
+
+  if (!res.ok) throw new Error("Error al obtener permisos");
+  return await res.json();
+};
+
 export const crearCategoria = async (datos) => {
   const res = await fetch(`${API_URL}/${RESOURCE}`, {
     ...defaultOptions(),
