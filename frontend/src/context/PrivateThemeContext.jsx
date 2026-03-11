@@ -1,38 +1,33 @@
 import React, { createContext, useContext, useEffect, useMemo, useState } from "react";
 
 const PrivateThemeContext = createContext(null);
-const PRIVATE_THEME_STORAGE_KEY = "private_theme_mode";
+const PRIVATE_THEME_STORAGE_KEY = "private_theme_palette";
+const PRIVATE_THEME_OPTIONS = ["white", "gray", "black"];
 
 export const PrivateThemeProvider = ({ children }) => {
-  const [mode, setMode] = useState("light");
+  const [palette, setPalette] = useState("white");
 
   useEffect(() => {
-    const savedMode = localStorage.getItem(PRIVATE_THEME_STORAGE_KEY);
-    if (savedMode === "light" || savedMode === "dark") {
-      setMode(savedMode);
+    const savedPalette = localStorage.getItem(PRIVATE_THEME_STORAGE_KEY);
+    if (PRIVATE_THEME_OPTIONS.includes(savedPalette)) {
+      setPalette(savedPalette);
     }
   }, []);
 
   useEffect(() => {
-    localStorage.setItem(PRIVATE_THEME_STORAGE_KEY, mode);
-  }, [mode]);
+    localStorage.setItem(PRIVATE_THEME_STORAGE_KEY, palette);
+  }, [palette]);
 
-  const setTheme = (nextMode) => {
-    setMode(nextMode === "dark" ? "dark" : "light");
-  };
-
-  const toggleTheme = () => {
-    setMode((currentMode) => (currentMode === "light" ? "dark" : "light"));
+  const setTheme = (nextPalette) => {
+    setPalette(PRIVATE_THEME_OPTIONS.includes(nextPalette) ? nextPalette : "white");
   };
 
   const value = useMemo(
     () => ({
-      mode,
-      isDark: mode === "dark",
-      setTheme,
-      toggleTheme,
+      palette,
+      setPalette: setTheme,
     }),
-    [mode]
+    [palette]
   );
 
   return <PrivateThemeContext.Provider value={value}>{children}</PrivateThemeContext.Provider>;
@@ -45,4 +40,3 @@ export const usePrivateTheme = () => {
   }
   return context;
 };
-

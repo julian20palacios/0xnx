@@ -2,13 +2,13 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  background-color: #1e293b;
+  background-color: var(--nav-bg);
   padding: 10px 20px;
-  color: white;
+  color: var(--nav-text);
 }
 
 .navbar-logo a {
-  color: white;
+  color: var(--nav-link);
   text-decoration: none;
   font-size: 1.5rem;
   font-weight: bold;
@@ -20,7 +20,7 @@
 }
 
 .navbar-links a {
-  color: white;
+  color: var(--nav-link);
   text-decoration: none;
 }
 
@@ -28,6 +28,7 @@
   display: none;
   font-size: 1.5rem;
   cursor: pointer;
+  color: var(--nav-text);
 }
 
 /* Responsive */
@@ -35,7 +36,7 @@
   .navbar-links {
     display: none;
     flex-direction: column;
-    background-color: #1e293b;
+    background-color: var(--nav-menu-bg);
     position: absolute;
     top: 60px;
     right: 0;
@@ -56,7 +57,7 @@
 .navbar-link-button {
   background: none;
   border: none;
-  color: white;
+  color: var(--nav-link);
   text-decoration: none;
   cursor: pointer;
   font: inherit;

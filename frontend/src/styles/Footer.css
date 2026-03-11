@@ -1,6 +1,6 @@
 .footer {
-  background-color: #1e293b;
-  color: white;
+  background-color: var(--footer-bg);
+  color: var(--footer-text);
   text-align: center;
   padding: 1rem;
   position: relative;

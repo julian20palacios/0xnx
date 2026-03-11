@@ -1,0 +1,60 @@
+/* Global theme tokens */
+:root {
+  --color-black: #000000;
+  --color-white: #ffffff;
+  --color-gray: #e5e5e5;
+  --app-bg: var(--color-white);
+  --app-text: var(--color-black);
+  --nav-bg: var(--color-black);
+  --nav-text: var(--color-white);
+  --nav-link: var(--color-white);
+  --nav-menu-bg: var(--color-black);
+  --footer-bg: var(--color-black);
+  --footer-text: var(--color-white);
+  --private-bg: var(--color-white);
+  --private-text: var(--color-black);
+  --private-surface: var(--color-white);
+  --private-surface-muted: var(--color-gray);
+  --private-border: var(--color-gray);
+  --private-sidebar-bg: var(--color-white);
+  --private-sidebar-text: var(--color-black);
+  --private-sidebar-hover: var(--color-gray);
+  --private-sidebar-border: var(--color-gray);
+}
+
+/* Private area palette overrides */
+.private-theme.private-theme-white {
+  --private-bg: var(--color-white);
+  --private-text: var(--color-black);
+  --private-surface: var(--color-white);
+  --private-surface-muted: var(--color-gray);
+  --private-border: var(--color-gray);
+  --private-sidebar-bg: var(--color-white);
+  --private-sidebar-text: var(--color-black);
+  --private-sidebar-hover: var(--color-gray);
+  --private-sidebar-border: var(--color-gray);
+}
+
+.private-theme.private-theme-black {
+  --private-bg: var(--color-black);
+  --private-text: var(--color-white);
+  --private-surface: var(--color-black);
+  --private-surface-muted: var(--color-gray);
+  --private-border: var(--color-gray);
+  --private-sidebar-bg: var(--color-black);
+  --private-sidebar-text: var(--color-white);
+  --private-sidebar-hover: var(--color-gray);
+  --private-sidebar-border: var(--color-gray);
+}
+
+.private-theme.private-theme-gray {
+  --private-bg: var(--color-gray);
+  --private-text: var(--color-black);
+  --private-surface: var(--color-gray);
+  --private-surface-muted: var(--color-white);
+  --private-border: var(--color-black);
+  --private-sidebar-bg: var(--color-gray);
+  --private-sidebar-text: var(--color-black);
+  --private-sidebar-hover: var(--color-white);
+  --private-sidebar-border: var(--color-black);
+}

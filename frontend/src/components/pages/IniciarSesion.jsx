@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { loginUsuario } from '../../api/Login';
 import "../../styles/Nabvar.css";
 
@@ -48,8 +48,12 @@ const IniciarSesion = () => {
       </form>
 
       <div>
-        <p>palaciosjulieth@gmail.com</p>
-        <p>A3142327562a</p>
+        <Link to="/recuperar-contrasena">Recuperar contrasena</Link>
+      </div>
+
+      <div>
+        <p>pxlxciosjulixn@gmail.com</p>
+        <p>Pass-2023</p>
       </div>
 
       <div>

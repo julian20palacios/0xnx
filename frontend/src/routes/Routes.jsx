@@ -8,13 +8,15 @@ import Navbar from "../components/layout/Navbar";
 import Sidebar from "../components/layout/Sidebar";
 import Footer from "../components/layout/Footer";
 import Peliculas from "../components/pages/Peliculas";
+import ConfiguracionesPerfil from "../components/pages/ConfiguracionesPerfil";
+import RecuperarContrasena from "../components/pages/RecuperarContrasena";
 import { PrivateThemeProvider, usePrivateTheme } from "../context/PrivateThemeContext";
 
 const PrivateLayoutContent = ({ children }) => {
-  const { mode } = usePrivateTheme();
+  const { palette } = usePrivateTheme();
 
   return (
-    <div className={`layout private-layout private-theme private-theme-${mode}`} style={{ minHeight: "100dvh" }}>
+    <div className={`layout private-layout private-theme private-theme-${palette}`} style={{ minHeight: "100dvh" }}>
       <div
         className="private-shell"
         style={{ display: "flex", minHeight: "100dvh", width: "100%", overflowX: "hidden", alignItems: "stretch" }}
@@ -33,7 +35,7 @@ const PrivateLayoutContent = ({ children }) => {
 const Layout = ({ children }) => {
   const location = useLocation();
 
-  const rutasPrivadas = ["/home", "/peliculas"];
+  const rutasPrivadas = ["/home", "/peliculas", "/configuraciones-perfil"];
   const esRutaPrivada = rutasPrivadas.some((ruta) =>
     location.pathname.startsWith(ruta)
   );
@@ -77,6 +79,14 @@ const Rutas = () => (
         }
       />
       <Route
+        path="/recuperar-contrasena"
+        element={
+          <Layout>
+            <RecuperarContrasena />
+          </Layout>
+        }
+      />
+      <Route
         path="/home"
         element={
           <RutaProtegida>
@@ -92,6 +102,16 @@ const Rutas = () => (
           <RutaProtegida>
             <Layout>
               <Peliculas />
+            </Layout>
+          </RutaProtegida>
+        }
+      />
+      <Route
+        path="/configuraciones-perfil"
+        element={
+          <RutaProtegida>
+            <Layout>
+              <ConfiguracionesPerfil />
             </Layout>
           </RutaProtegida>
         }
