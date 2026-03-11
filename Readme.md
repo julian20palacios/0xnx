@@ -37,3 +37,20 @@ Backend:
 
     VITE_API_BASE_URL=https://dataflow-backend-jp7b.onrender.com/api/
     VITE_STRIPE_PUBLIC_KEY=pk_test_51Ro9LtDFNKDjvoNlX3uGnwvGvBX8Tusev7DkR1aRkJBX2uSmrMOnPVSxIJngtMgk13MJs9Wa1mSqvxQkqWyFa11Q00MTpIVJUe
+
+
+ARCHIVO ENV
+
+
+C:\Users\Julian Herreño\OneDrive - Colombian Trade Company SAS\Escritorio\0xnx\backend\.env
+
+![1773205161698](image/Readme/1773205161698.png)
+
+
+C:\Users\Julian Herreño\OneDrive - Colombian Trade Company SAS\Escritorio\0xnx\frontend\.env
+
+![1773205210719](image/Readme/1773205210719.png)
+
+C:\Users\Julian Herreño\OneDrive - Colombian Trade Company SAS\Escritorio\0xnx\frontend\.env.production
+
+![1773205237721](image/Readme/1773205237721.png)
