@@ -30,8 +30,23 @@ import secrets
 from django.contrib.auth.password_validation import validate_password
 from django.core.exceptions import ValidationError
 from .email_utils import send_password_reset_code
+from decouple import config
 from .models import PasswordResetCode
+from google.oauth2 import id_token as google_id_token
+from google.auth.transport import requests as google_requests
+import re
 User = get_user_model()
+
+
+def _generate_unique_username(email):
+    base = (email.split("@")[0] or "usuario").lower()
+    base = re.sub(r"[^a-z0-9_]+", "", base) or "usuario"
+    username = base
+    counter = 1
+    while User.objects.filter(username=username).exists():
+        counter += 1
+        username = f"{base}{counter}"
+    return username
 
 class RegisterView(APIView):
     permission_classes = [AllowAny]
@@ -46,6 +61,46 @@ class RegisterView(APIView):
             'refresh': str(refresh),
             'access': str(refresh.access_token),
         }, status=status.HTTP_201_CREATED)
+
+
+class GoogleLoginView(APIView):
+    permission_classes = [AllowAny]
+
+    def post(self, request):
+        token = request.data.get("id_token") or request.data.get("credential")
+        if not token:
+            return Response({"detail": "Falta el id_token."}, status=status.HTTP_400_BAD_REQUEST)
+
+        client_id = config("GOOGLE_CLIENT_ID", default=None)
+        if not client_id:
+            return Response({"detail": "GOOGLE_CLIENT_ID no configurado."}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+        try:
+            idinfo = google_id_token.verify_oauth2_token(token, google_requests.Request(), client_id)
+        except Exception:
+            return Response({"detail": "Token de Google invalido."}, status=status.HTTP_400_BAD_REQUEST)
+
+        email = idinfo.get("email")
+        if not email:
+            return Response({"detail": "No se pudo obtener el correo."}, status=status.HTTP_400_BAD_REQUEST)
+
+        user = User.objects.filter(email__iexact=email).first()
+        if not user:
+            username = _generate_unique_username(email)
+            nombre = idinfo.get("given_name") or username
+            apellido = idinfo.get("family_name") or ""
+            user = User(email=email, username=username, nombre=nombre, apellido=apellido)
+            user.set_unusable_password()
+            user.save()
+
+        refresh = RefreshToken.for_user(user)
+        return Response(
+            {
+                "refresh": str(refresh),
+                "access": str(refresh.access_token),
+            },
+            status=status.HTTP_200_OK,
+        )
 
 class PasswordResetRequestView(APIView):
     permission_classes = [AllowAny]

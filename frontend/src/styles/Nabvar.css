@@ -33,6 +33,15 @@
   color: var(--nav-text);
 }
 
+.google-login {
+  margin-top: 12px;
+  max-width: 260px;
+}
+
+.google-login iframe {
+  max-width: 100%;
+}
+
 /* Responsive */
 @media (max-width: 768px) {
   .navbar-links {

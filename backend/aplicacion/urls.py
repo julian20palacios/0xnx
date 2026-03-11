@@ -3,6 +3,7 @@ from rest_framework.routers import DefaultRouter
 from .views import (
     CategoriaViewSet,
     RegisterView,
+    GoogleLoginView,
     validar_token,
     PasswordResetRequestView,
     PasswordResetConfirmView,
@@ -26,6 +27,7 @@ urlpatterns = [
 
     # Ruta para iniciar sesión y obtener el par de tokens JWT (access + refresh)
     path('login/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
+    path('login-google/', GoogleLoginView.as_view(), name='google_login'),
 
     # Ruta para refrescar el token de acceso usando el token de refresh
     path('refresh/', TokenRefreshView.as_view(), name='token_refresh'),
