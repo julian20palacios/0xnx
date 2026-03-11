@@ -133,20 +133,25 @@ REST_FRAMEWORK = {
 
 # Configuración de CORS y CSRF dinámicamente
 CORS_ALLOW_CREDENTIALS = True
-FRONTEND_URL = config("FRONTEND_URL", default="")
+FRONTEND_URL = config("FRONTEND_URL", default="").strip()
+
+def _normalize_origin(url: str) -> str:
+    # CORS espera un "origin" sin slash final.
+    return url.rstrip("/")
+
+_allowed_origins = []
 
 if DEBUG:
-    CORS_ALLOWED_ORIGINS = [
+    _allowed_origins.extend([
         "http://localhost:5173",
         "http://127.0.0.1:5173",
-    ]
-    CSRF_TRUSTED_ORIGINS = [
-        "http://localhost:5173",
-        "http://127.0.0.1:5173",
-    ]
-else:
-    CORS_ALLOWED_ORIGINS = [FRONTEND_URL] if FRONTEND_URL else []
-    CSRF_TRUSTED_ORIGINS = [FRONTEND_URL] if FRONTEND_URL else []
+    ])
+
+if FRONTEND_URL:
+    _allowed_origins.append(_normalize_origin(FRONTEND_URL))
+
+CORS_ALLOWED_ORIGINS = _allowed_origins
+CSRF_TRUSTED_ORIGINS = _allowed_origins
 
 SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
 USE_X_FORWARDED_HOST = True
