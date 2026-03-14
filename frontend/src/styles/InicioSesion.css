@@ -1,0 +1,361 @@
+/* Tip: uso Arial como principal por tu preferencia, con fallbacks */
+@import url('https://fonts.googleapis.com/css2?family=Manrope:wght@300;400;600;700&family=Space+Grotesk:wght@500;600&display=swap');
+
+:root {
+  --radius: 0.65rem;
+  --font-sans: "Arial", "Manrope", "Space Grotesk", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  /* placeholders for light theme (kept minimal) */
+  --background: oklch(1 0 0);
+  --foreground: oklch(0.145 0 0);
+  --card: oklch(1 0 0);
+  --card-foreground: oklch(0.145 0 0);
+  --border: oklch(0.922 0 0);
+  --ring: oklch(0.708 0 0);
+}
+
+/* DARK palette (preserve tus valores tal cual) */
+.dark {
+  --background: oklch(0.085 0 0);
+  --foreground: oklch(0.985 0 0);
+  --card: oklch(0.155 0 0);
+  --card-foreground: oklch(0.985 0 0);
+  --popover: oklch(0.155 0 0);
+  --popover-foreground: oklch(0.985 0 0);
+  --primary: oklch(0.922 0 0);
+  --primary-foreground: oklch(0.205 0 0);
+  --secondary: oklch(0.22 0 0);
+  --secondary-foreground: oklch(0.985 0 0);
+  --muted: oklch(0.22 0 0);
+  --muted-foreground: oklch(0.708 0 0);
+  --accent: oklch(0.22 0 0);
+  --accent-foreground: oklch(0.985 0 0);
+  --destructive: oklch(0.704 0.191 22.216);
+  --border: oklch(1 0 0 / 10%);
+  --input: oklch(1 0 0 / 15%);
+  --ring: oklch(0.556 0 0);
+  --sidebar: oklch(0.155 0 0);
+  --sidebar-foreground: oklch(0.985 0 0);
+}
+
+/* Reset y base */
+*,
+*::before,
+*::after { box-sizing: border-box; }
+
+html, body, #root {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  background: var(--background);
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  color: var(--foreground);
+}
+
+/* Body login wrapper */
+body.login-theme {
+  background: var(--background);
+  color-scheme: dark;
+}
+
+/* Page layout */
+.login-page {
+  min-height: 100%;
+  width: 100%;
+  padding: 3.5rem clamp(1.5rem, 4vw, 4rem);
+  background:
+    radial-gradient(circle at 20% 10%, oklch(0.18 0 0 / 0.35) 0%, transparent 55%),
+    radial-gradient(circle at 80% 0%, oklch(0.2 0 0 / 0.35) 0%, transparent 55%),
+    radial-gradient(circle at 50% 100%, oklch(0.12 0 0 / 0.75) 0%, transparent 60%),
+    var(--background);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Shell */
+.login-shell {
+  width: min(1100px, 100%);
+  background: linear-gradient(180deg, color-mix(in oklab, var(--card), transparent 5%), var(--card));
+  border-radius: clamp(1.2rem, 2vw, 2.5rem);
+  border: 1px solid color-mix(in oklab, var(--border), transparent 35%);
+  box-shadow: 0 30px 70px -45px oklch(0 0 0 / 0.85);
+  display: grid;
+  grid-template-columns: minmax(0, 1.05fr) minmax(0, 0.95fr);
+  overflow: hidden;
+  animation: shellIn 0.8s ease-out both;
+  gap: 0;
+}
+
+/* HERO */
+.login-hero {
+  position: relative;
+  padding: clamp(2.75rem, 5.3vw, 4.85rem);
+  background: linear-gradient(140deg, color-mix(in oklab, var(--card), var(--background) 10%), var(--card));
+  border-right: 1px solid color-mix(in oklab, var(--border), transparent 30%);
+  display: flex;
+  align-items: center;
+  min-height: 100%;
+  overflow: hidden;
+}
+
+.login-hero__content {
+  position: relative;
+  z-index: 2;
+  max-width: 420px;
+  display: grid;
+  gap: 1.25rem;
+  animation: fadeUp 0.9s ease-out both;
+}
+
+.login-hero-title-row {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.login-hero-avatar {
+  width: 52px;
+  height: 52px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid color-mix(in oklab, var(--foreground), transparent 60%);
+  box-shadow: 0 10px 24px -16px oklch(0 0 0 / 0.85);
+}
+
+.login-hero-title {
+  font-family: var(--font-sans);
+  font-size: clamp(1.6rem, 2.6vw, 2.25rem);
+  line-height: 1.1;
+  margin: 0;
+  color: color-mix(in oklab, var(--foreground), var(--muted-foreground) 25%);
+}
+
+.login-hero__content h1 {
+  font-family: var(--font-sans);
+  font-size: clamp(2rem, 3.4vw, 3rem);
+  line-height: 1.05;
+  margin: 0;
+  color: var(--foreground);
+}
+
+.login-hero__content p {
+  margin: 0;
+  color: var(--muted-foreground);
+  font-size: 1rem;
+  line-height: 1.7;
+}
+
+/* badge + stats */
+.login-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.35rem 0.85rem;
+  border-radius: 999px;
+  background: color-mix(in oklab, var(--accent), var(--card) 25%);
+  color: var(--accent-foreground);
+  font-size: 0.85rem;
+  font-weight: 700;
+  width: fit-content;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  border: 1px solid color-mix(in oklab, var(--border), transparent 25%);
+}
+
+.login-stats {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 1rem;
+  margin-top: 0.6rem;
+}
+
+.login-stats div {
+  padding: 0.85rem 1rem;
+  background: color-mix(in oklab, var(--card), var(--background) 20%);
+  border-radius: var(--radius);
+  border: 1px solid color-mix(in oklab, var(--border), transparent 25%);
+  display: grid;
+  gap: 0.35rem;
+}
+
+.login-stats strong { font-size: 1.1rem; font-weight: 800; color: var(--foreground); }
+.login-stats span { color: var(--muted-foreground); font-size: 0.85rem; }
+
+/* glow */
+.login-hero__glow {
+  position: absolute;
+  width: 360px;
+  height: 360px;
+  right: -150px;
+  top: -150px;
+  background: radial-gradient(circle, oklch(0.32 0.08 250 / 0.22), transparent 70%);
+  filter: blur(36px);
+  transform: rotate(8deg);
+  transition: transform 0.6s ease;
+  pointer-events: none;
+}
+
+/* CARD (form) */
+.login-card {
+  padding: clamp(2.5rem, 4.3vw, 3.8rem);
+  display: grid;
+  gap: 1.85rem;
+  background: transparent; /* usamos shell background + card variable para profundidad */
+  color: var(--foreground);
+}
+
+.login-card__header { text-align: center; }
+.login-card__header h2 { font-family: var(--font-sans); font-size: clamp(1.35rem, 1.8vw, 1.9rem); margin: 0 0 0.35rem; }
+.login-card__header p { margin: 0; color: var(--muted-foreground); font-size: 0.88rem; }
+
+/* form layout */
+.login-form { display: grid; gap: 1.25rem; justify-items: stretch; padding: 0 0.6rem; }
+
+.input-field { display: grid; gap: 0.55rem; font-size: 0.85rem; color: var(--muted-foreground); }
+.input-field span { color: var(--muted-foreground); font-weight: 600; }
+
+.input-field input {
+  border-radius: var(--radius);
+  border: 1px solid color-mix(in oklab, var(--border), transparent 15%);
+  padding: 0.75rem 0.9rem;
+  font-size: 0.95rem;
+  font-family: inherit;
+  background: color-mix(in oklab, var(--card), var(--background) 12%);
+  color: var(--foreground);
+  transition: border-color 0.18s ease, box-shadow 0.18s ease, transform 0.12s ease;
+  box-shadow: inset 0 0 0 1px transparent;
+}
+
+/* placeholder + focus */
+.input-field input::placeholder { color: var(--muted-foreground); opacity: 0.9; }
+.input-field input:focus {
+  outline: none;
+  border-color: color-mix(in oklab, var(--ring), var(--foreground) 18%);
+  box-shadow:
+    0 0 0 4px color-mix(in oklab, var(--ring), transparent 78%),
+    inset 0 0 0 1px color-mix(in oklab, var(--foreground), transparent 70%);
+  transform: translateY(-1px);
+}
+
+/* password wrapper */
+.password-field .password-wrapper {
+  position: relative;
+}
+.password-field input {
+  width: 100%;
+  padding-right: 2.6rem;
+}
+.password-toggle {
+  position: absolute;
+  right: 0.65rem;
+  top: 50%;
+  transform: translateY(-50%);
+  background: transparent;
+  border: none;
+  color: color-mix(in oklab, var(--muted-foreground), var(--foreground) 12%);
+  padding: 0.2rem;
+  border-radius: 999px;
+  cursor: pointer;
+  line-height: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transition: filter .12s ease, transform .12s ease;
+}
+.password-toggle:hover { transform: translateY(-50%) scale(1.04); filter: brightness(1.05); }
+.password-toggle:focus { outline: none; box-shadow: 0 0 0 3px color-mix(in oklab, var(--ring), transparent 78%); }
+.password-icon { width: 18px; height: 18px; }
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* primary button */
+.primary-button {
+  border: none;
+  border-radius: var(--radius);
+  padding: 0.9rem 1rem;
+  background: linear-gradient(180deg, color-mix(in oklab, var(--primary), var(--card) 10%), var(--primary));
+  color: var(--primary-foreground);
+  font-weight: 700;
+  font-size: 0.95rem;
+  cursor: pointer;
+  transition: transform 0.18s ease, box-shadow 0.18s ease, filter 0.18s ease;
+  box-shadow: 0 12px 28px -18px oklch(0 0 0 / 0.85);
+  width: 100%;
+  margin: 0;
+}
+.primary-button:hover { transform: translateY(-2px); filter: brightness(1.06); }
+.primary-button:disabled { opacity: 0.6; cursor: not-allowed; transform: none; box-shadow: none; }
+
+/* error */
+.form-error {
+  margin: 0;
+  padding: 0.6rem 0.75rem;
+  border-radius: var(--radius);
+  background: color-mix(in oklab, var(--destructive), transparent 85%);
+  color: color-mix(in oklab, var(--destructive), var(--foreground) 20%);
+  font-size: 0.9rem;
+}
+
+/* google area */
+.login-google { display: grid; gap: 1.2rem; justify-items: stretch; width: 100%; padding: 0 0.6rem; }
+.login-google .google-login {
+  width: 100%;
+  max-width: 100%;
+  margin-top: 0;
+}
+.login-google .google-login iframe,
+.login-google .google-login > div {
+  width: 100% !important;
+}
+.login-divider { display:grid; align-items:center; gap:1rem; grid-template-columns: 1fr auto 1fr; color: var(--muted-foreground); font-size: 0.8rem; }
+.login-divider::before, .login-divider::after { content:""; height:1px; background: color-mix(in oklab, var(--border), transparent 60%); }
+
+/* links / demo / footer */
+.login-links { display:flex; flex-wrap:wrap; gap:1.05rem; font-size:0.85rem; width:100%; justify-content:space-between; }
+.login-links a { color: var(--muted-foreground); text-decoration:none; font-weight:600; position:relative; }
+.login-links a:hover { color: var(--foreground); }
+.login-links a::after { content:""; position:absolute; left:0; bottom:-4px; width:0; height:2px; background: var(--foreground); transition: width 0.18s ease; }
+.login-links a:hover::after { width:100%; }
+
+.login-demo { padding:0.85rem 1rem; border-radius: var(--radius); border:1px dashed color-mix(in oklab, var(--border), transparent 30%); background: color-mix(in oklab, var(--card), var(--background) 15%); display:grid; gap:0.65rem; }
+.login-demo p { margin:0; font-weight:700; }
+.demo-credentials { display:flex; justify-content:space-between; gap:1rem; flex-wrap:wrap; color: var(--muted-foreground); font-size:0.8rem; }
+
+.login-footer a { color: var(--muted-foreground); text-decoration:none; font-size:0.85rem; }
+.login-footer a:hover { color: var(--foreground); }
+
+/* small screens */
+@media (max-width: 980px) {
+  .login-shell { grid-template-columns: 1fr; }
+  .login-hero { border-right: none; border-bottom: 1px solid color-mix(in oklab, var(--border), transparent 25%); padding: clamp(1.4rem, 4vw, 2.2rem); }
+  .login-hero__glow { display:none; }
+  .login-stats { grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); }
+}
+
+/* tiny screens */
+@media (max-width: 600px) {
+  .login-page { padding: 2.5rem 1.25rem; }
+  .login-links { flex-direction: column; }
+  .login-card { padding: 1.4rem; }
+}
+
+/* animations */
+@keyframes shellIn {
+  from { opacity: 0; transform: translateY(12px) scale(0.98); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
+}
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(14px); }
+  to { opacity: 1; transform: translateY(0); }
+}

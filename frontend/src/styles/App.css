@@ -4,14 +4,17 @@ html,
 body,
 #root {
   height: 100%;
+  width: 100%;
   margin: 0;
   padding: 0;
+  background-color: var(--app-bg);
 }
 
 .layout {
   display: flex;
   flex-direction: column;
   min-height: 100vh;
+  background-color: var(--app-bg);
 }
 
 .content-area {
@@ -19,9 +22,10 @@ body,
   flex: 1;
   align-items: stretch;
   overflow: hidden;
+  background-color: var(--app-bg);
 }
 
-main {
+.app-main {
   flex: 1;
   padding: 2rem;
   background-color: var(--app-bg);
@@ -29,6 +33,21 @@ main {
   overflow-y: auto;
   min-height: 0;
   margin-left: 0;
+}
+
+.layout--flush {
+  background-color: transparent;
+}
+
+.layout--flush .content-area {
+  background-color: transparent;
+  overflow: visible;
+}
+
+.layout--flush .app-main {
+  padding: 0;
+  background-color: transparent;
+  overflow: visible;
 }
 
 .footer {

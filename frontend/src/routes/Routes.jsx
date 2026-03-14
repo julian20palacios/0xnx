@@ -24,7 +24,7 @@ const PrivateLayoutContent = ({ children }) => {
       >
         <Sidebar />
         <div className="content-area" style={{ flex: 1, minWidth: 0 }}>
-          <main className="private-main" style={{ minHeight: "100%", minWidth: 0 }}>
+          <main className="private-main app-main" style={{ minHeight: "100%", minWidth: 0 }}>
             {children}
           </main>
         </div>
@@ -41,6 +41,11 @@ const Layout = ({ children }) => {
     location.pathname.startsWith(ruta)
   );
 
+  const rutasFullBleed = ["/", "/iniciar-sesion", "/registro", "/recuperar-contrasena"];
+  const esFullBleed = rutasFullBleed.some((ruta) =>
+    location.pathname === ruta || location.pathname.startsWith(`${ruta}/`)
+  );
+
   if (esRutaPrivada) {
     return (
       <PrivateThemeProvider>
@@ -50,10 +55,12 @@ const Layout = ({ children }) => {
   }
 
   return (
-    <div className="layout">
+    <div className={`layout${esFullBleed ? " layout--flush" : ""}`}>
       <Navbar />
       <div className="content-area" style={{ display: "flex" }}>
-        <main style={{ flex: 1 }}>{children}</main>
+        <main className="app-main" style={{ flex: 1 }}>
+          {children}
+        </main>
       </div>
       <Footer />
     </div>

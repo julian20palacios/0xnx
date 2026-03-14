@@ -1,119 +1,225 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { loginGoogle, loginUsuario } from '../../api/Login';
-import "../../styles/Nabvar.css";
+import "../../styles/InicioSesion.css";
+import login0xnx from "../../assets/images/login0xnx.jpg";
 
 const IniciarSesion = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState('');
+  const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
   const googleButtonRef = useRef(null);
+  const googleInitialized = useRef(false);
   const googleClientId = import.meta.env.VITE_GOOGLE_CLIENT_ID;
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setError('');
+    setLoading(true);
     try {
-      const data = await loginUsuario(email, password);
+      const data = await loginUsuario(email.trim(), password);
       localStorage.setItem('access', data.access);
       localStorage.setItem('refresh', data.refresh);
       navigate('/home');
     } catch (err) {
       setError('Correo o contraseña incorrectos');
+    } finally {
+      setLoading(false);
     }
   };
 
   const handleGoogleCredential = async (response) => {
+    setError('');
     if (!response?.credential) {
-      setError('No se recibio credencial de Google.');
+      setError('No se recibió credencial de Google.');
       return;
     }
+    setLoading(true);
     try {
       const data = await loginGoogle(response.credential);
       localStorage.setItem('access', data.access);
       localStorage.setItem('refresh', data.refresh);
       navigate('/home');
     } catch (err) {
-      setError(err.message || 'No se pudo iniciar sesion con Google.');
+      setError(err?.message || 'No se pudo iniciar sesión con Google.');
+    } finally {
+      setLoading(false);
     }
   };
+
+  useEffect(() => {
+    document.body.classList.add('login-theme', 'dark');
+    return () => {
+      document.body.classList.remove('login-theme', 'dark');
+    };
+  }, []);
 
   useEffect(() => {
     if (!googleClientId || !googleButtonRef.current) return;
 
     const initGoogle = () => {
       if (!window.google || !googleButtonRef.current) return false;
-      window.google.accounts.id.initialize({
-        client_id: googleClientId,
-        callback: handleGoogleCredential,
-      });
+      if (!googleInitialized.current) {
+        window.google.accounts.id.initialize({
+          client_id: googleClientId,
+          callback: handleGoogleCredential,
+        });
+        googleInitialized.current = true;
+      }
+      const buttonWidth = Math.max(
+        260,
+        Math.floor(googleButtonRef.current.offsetWidth || 0)
+      );
+      googleButtonRef.current.innerHTML = '';
       window.google.accounts.id.renderButton(googleButtonRef.current, {
-        theme: 'outline',
+        theme: 'filled_black',
         size: 'large',
         text: 'continue_with',
         shape: 'pill',
-        width: 260,
+        width: buttonWidth,
       });
       return true;
     };
 
     if (initGoogle()) return;
-
     const timer = setInterval(() => {
       if (initGoogle()) clearInterval(timer);
     }, 300);
-
-    return () => clearInterval(timer);
+    const handleResize = () => initGoogle();
+    window.addEventListener('resize', handleResize);
+    return () => {
+      clearInterval(timer);
+      window.removeEventListener('resize', handleResize);
+    };
   }, [googleClientId]);
 
   return (
-    <div>
-      <h2>Iniciar Sesión</h2>
-      <form onSubmit={handleSubmit}>
-        <div>
-          <label>Correo electrónico</label>
-          <input
-            type="email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            required
-          />
-        </div>
-        <div>
-          <label>Contraseña</label>
-          <input
-            type="password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            required
-          />
-        </div>
-        {error && <p>{error}</p>}
-        <button type="submit">Iniciar sesión</button> 
-      </form>
+    <div className="login-page dark" role="main">
+      <div className="login-shell" aria-labelledby="login-title">
+        <aside className="login-hero" aria-hidden="true">
+          <div className="login-hero__content">
+            <div className="login-hero-title-row">
+              <img
+                className="login-hero-avatar"
+                src={login0xnx}
+                alt="Bienvenido"
+                loading="lazy"
+              />
+              <p className="login-hero-title">Bienvenido de nuevo</p>
+            </div>
+            <p>
+              Inicia sesión para seguir administrando tus pedidos, aliados y
+              reportes en un solo lugar.
+            </p>
+          </div>
+          <div className="login-hero__glow" aria-hidden="true" />
+        </aside>
 
-      {googleClientId && (
-        <div>
-          <p>Registrarse con Google o Iniciar Sesión</p>
-          <div className="google-login" ref={googleButtonRef} />
-        </div>
-      )}
+        <main className="login-card" aria-labelledby="login-title">
+          <div className="login-card__header">
+            <h2 id="login-title">Iniciar sesión</h2>
+            <p>Accede con tu correo y contraseña corporativos.</p>
+          </div>
 
-      <div>
-        <Link to="/registro">Registrarse con formulario</Link>
-      </div>
+          <form onSubmit={handleSubmit} className="login-form" noValidate>
+            <label className="input-field">
+              <span>Correo electrónico</span>
+              <input
+                type="email"
+                name="email"
+                autoComplete="username"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                placeholder="nombre@empresa.com"
+                required
+                aria-label="Correo electrónico"
+              />
+            </label>
 
-      <div>
-        <Link to="/recuperar-contrasena">Recuperar contrasena</Link>
-      </div>
+            <label className="input-field password-field">
+              <span>Contraseña</span>
+              <div className="password-wrapper">
+                <input
+                  type={showPassword ? 'text' : 'password'}
+                  name="password"
+                  autoComplete="current-password"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  placeholder="••••••••"
+                  required
+                  aria-label="Contraseña"
+                />
+                <button
+                  type="button"
+                  className="password-toggle"
+                  onClick={() => setShowPassword((s) => !s)}
+                  aria-pressed={showPassword}
+                  aria-label={showPassword ? 'Ocultar contraseña' : 'Mostrar contraseña'}
+                >
+                  <svg
+                    className="password-icon"
+                    viewBox="0 0 24 24"
+                    aria-hidden="true"
+                    focusable="false"
+                  >
+                    <path
+                      d="M1.5 12s4-6.5 10.5-6.5S22.5 12 22.5 12s-4 6.5-10.5 6.5S1.5 12 1.5 12Z"
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth="1.5"
+                      strokeLinejoin="round"
+                    />
+                    <circle
+                      cx="12"
+                      cy="12"
+                      r="3.5"
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth="1.5"
+                    />
+                  </svg>
+                  <span className="sr-only">
+                    {showPassword ? 'Ocultar contraseña' : 'Mostrar contraseña'}
+                  </span>
+                </button>
+              </div>
+            </label>
 
-      <div>
-        <p>pxlxciosjulixn@gmail.com</p>
-        <p>Pass-2023</p>
-      </div>
+            <p className="form-error" role="alert" aria-live="polite" style={{ display: error ? 'block' : 'none' }}>
+              {error}
+            </p>
 
-      <div>
-        <p><a href="/">Volver al inicio</a></p>
+            <button
+              type="submit"
+              className="primary-button"
+              disabled={loading}
+              aria-busy={loading}
+            >
+              {loading ? 'Ingresando…' : 'Iniciar sesión'}
+            </button>
+          </form>
+
+          {googleClientId && (
+            <div className="login-google" aria-hidden={loading}>
+              <div className="login-divider">
+                <span>o continúa con</span>
+              </div>
+              <div className="google-login" ref={googleButtonRef} />
+            </div>
+          )}
+
+          <div className="login-links">
+            <Link to="/registro">Registrarse con formulario</Link>
+            <Link to="/recuperar-contrasena">Recuperar contraseña</Link>
+          </div>
+
+          <div className="login-footer">
+            <Link to="/">Volver al inicio</Link>
+          </div>
+        </main>
       </div>
     </div>
   );
