@@ -4,7 +4,17 @@ pxlxciosjulixn@gmail.com
 
 Pass-2023
 
-xas
+# Activación
+
+cd backend
+
+.\env\Scripts\Activate
+
+python manage.py runserver
+
+cd frontend
+
+npm run dev
 
 # Paso a Paso activación de plantilla al descargar de GITHUB
 
@@ -38,14 +48,11 @@ Backend:
     VITE_API_BASE_URL=https://dataflow-backend-jp7b.onrender.com/api/
     VITE_STRIPE_PUBLIC_KEY=pk_test_51Ro9LtDFNKDjvoNlX3uGnwvGvBX8Tusev7DkR1aRkJBX2uSmrMOnPVSxIJngtMgk13MJs9Wa1mSqvxQkqWyFa11Q00MTpIVJUe
 
-
 ARCHIVO ENV
-
 
 C:\Users\Julian Herreño\OneDrive - Colombian Trade Company SAS\Escritorio\0xnx\backend\.env
 
 ![1773205161698](image/Readme/1773205161698.png)
-
 
 C:\Users\Julian Herreño\OneDrive - Colombian Trade Company SAS\Escritorio\0xnx\frontend\.env
 
