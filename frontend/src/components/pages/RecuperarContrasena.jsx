@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import {
   confirmPasswordReset,
@@ -6,6 +6,7 @@ import {
   verifyPasswordResetCode,
 } from "../../api/PasswordReset";
 import "../../styles/RecuperarContrasena.css";
+import login0xnx from "../../assets/images/login0xnx.jpg";
 
 const RecuperarContrasena = () => {
   const [step, setStep] = useState("request");
@@ -23,6 +24,19 @@ const RecuperarContrasena = () => {
     if (step === "reset") return "Restablecer contrasena";
     return "Recuperar contrasena";
   }, [step]);
+
+  const helperText = useMemo(() => {
+    if (step === "reset") return "Define una nueva contrasena para tu cuenta.";
+    if (step === "verify") return "Ingresa el codigo de 6 digitos que enviamos a tu correo.";
+    return "Te enviaremos un codigo de 6 digitos para cambiar tu contrasena.";
+  }, [step]);
+
+  useEffect(() => {
+    document.body.classList.add("reset-theme", "dark");
+    return () => {
+      document.body.classList.remove("reset-theme", "dark");
+    };
+  }, []);
 
   const handleRequest = async (event) => {
     event.preventDefault();
@@ -90,90 +104,133 @@ const RecuperarContrasena = () => {
   };
 
   return (
-    <section className="reset-page">
-      <header className="reset-header">
-        <h2>{headerText}</h2>
-        <p>
-          {step === "reset"
-            ? "Define una nueva contrasena para tu cuenta."
-            : step === "verify"
-            ? "Ingresa el codigo de 6 digitos que enviamos a tu correo."
-            : "Te enviaremos un codigo de 6 digitos para cambiar tu contrasena."}
-        </p>
-      </header>
+    <div className="reset-page dark" role="main">
+      <div className="reset-shell" aria-labelledby="reset-title">
+        <aside className="reset-hero" aria-hidden="true">
+          <div className="reset-hero__content">
+            <div className="reset-hero-title-row">
+              <img
+                className="reset-hero-avatar"
+                src={login0xnx}
+                alt="Recuperacion"
+                loading="lazy"
+              />
+            </div>
+          </div>
+        </aside>
 
-      {step === "verify" ? (
-        <form className="reset-form" onSubmit={handleVerify}>
-          <label>
-            Codigo de 6 digitos
-            <input
-              type="text"
-              inputMode="numeric"
-              maxLength={6}
-              value={code}
-              onChange={(event) => setCode(event.target.value.replace(/\D/g, "").slice(0, 6))}
-              required
-            />
-          </label>
-          {error && <p className="reset-error">{error}</p>}
-          <button type="submit">Verificar codigo</button>
-          <button
-            type="button"
-            className="reset-link"
-            onClick={() => {
-              setError("");
-              setActionStatus("");
-              setStep("request");
-            }}
-          >
-            Enviar otro codigo
-          </button>
-        </form>
-      ) : step === "reset" ? (
-        <form className="reset-form" onSubmit={handleConfirm}>
-          <label>
-            Nueva contrasena
-            <input
-              type="password"
-              value={newPassword}
-              onChange={(event) => setNewPassword(event.target.value)}
-              required
-            />
-          </label>
-          <label>
-            Confirmar contrasena
-            <input
-              type="password"
-              value={confirmPassword}
-              onChange={(event) => setConfirmPassword(event.target.value)}
-              required
-            />
-          </label>
-          {error && <p className="reset-error">{error}</p>}
-          {actionStatus && <p className="reset-status">{actionStatus}</p>}
-          <button type="submit">Actualizar contrasena</button>
-        </form>
-      ) : (
-        <form className="reset-form" onSubmit={handleRequest}>
-          <label>
-            Correo electronico
-            <input
-              type="email"
-              value={email}
-              onChange={(event) => setEmail(event.target.value)}
-              required
-            />
-          </label>
-          {error && <p className="reset-error">{error}</p>}
-          {requestStatus && <p className="reset-status">{requestStatus}</p>}
-          <button type="submit">Enviar codigo</button>
-        </form>
-      )}
+        <main className="reset-card" aria-labelledby="reset-title">
+          <div className="reset-card__header">
+            <h2 id="reset-title">{headerText}</h2>
+            <p>{helperText}</p>
+          </div>
 
-      <div className="reset-footer">
-        <Link to="/iniciar-sesion">Volver al inicio de sesion</Link>
+          {step === "verify" ? (
+            <form className="reset-form" onSubmit={handleVerify} noValidate>
+              <label className="reset-field">
+                <span>Codigo de 6 digitos</span>
+                <input
+                  type="text"
+                  inputMode="numeric"
+                  maxLength={6}
+                  value={code}
+                  onChange={(event) =>
+                    setCode(event.target.value.replace(/\D/g, "").slice(0, 6))
+                  }
+                  placeholder="000000"
+                  required
+                />
+              </label>
+              {error && (
+                <p className="reset-error" role="alert" aria-live="polite">
+                  {error}
+                </p>
+              )}
+              <button type="submit" className="primary-button">
+                Verificar codigo
+              </button>
+              <button
+                type="button"
+                className="reset-link"
+                onClick={() => {
+                  setError("");
+                  setActionStatus("");
+                  setStep("request");
+                }}
+              >
+                Enviar otro codigo
+              </button>
+            </form>
+          ) : step === "reset" ? (
+            <form className="reset-form" onSubmit={handleConfirm} noValidate>
+              <label className="reset-field">
+                <span>Nueva contrasena</span>
+                <input
+                  type="password"
+                  value={newPassword}
+                  onChange={(event) => setNewPassword(event.target.value)}
+                  placeholder="Tu nueva clave"
+                  required
+                />
+              </label>
+              <label className="reset-field">
+                <span>Confirmar contrasena</span>
+                <input
+                  type="password"
+                  value={confirmPassword}
+                  onChange={(event) => setConfirmPassword(event.target.value)}
+                  placeholder="Repite tu clave"
+                  required
+                />
+              </label>
+              {error && (
+                <p className="reset-error" role="alert" aria-live="polite">
+                  {error}
+                </p>
+              )}
+              {actionStatus && (
+                <p className="reset-status" role="status" aria-live="polite">
+                  {actionStatus}
+                </p>
+              )}
+              <button type="submit" className="primary-button">
+                Actualizar contrasena
+              </button>
+            </form>
+          ) : (
+            <form className="reset-form" onSubmit={handleRequest} noValidate>
+              <label className="reset-field">
+                <span>Correo electronico</span>
+                <input
+                  type="email"
+                  value={email}
+                  onChange={(event) => setEmail(event.target.value)}
+                  placeholder="nombre@empresa.com"
+                  required
+                />
+              </label>
+              {error && (
+                <p className="reset-error" role="alert" aria-live="polite">
+                  {error}
+                </p>
+              )}
+              {requestStatus && (
+                <p className="reset-status" role="status" aria-live="polite">
+                  {requestStatus}
+                </p>
+              )}
+              <button type="submit" className="primary-button">
+                Enviar codigo
+              </button>
+            </form>
+          )}
+
+          <div className="reset-footer">
+            <Link to="/iniciar-sesion">Volver al inicio de sesion</Link>
+          </div>
+        </main>
       </div>
-    </section>
+    </div>
   );
 };
 
