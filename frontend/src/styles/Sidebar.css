@@ -404,6 +404,10 @@
   }
 
   .sidebar-profile {
-    margin-bottom: calc(36px + env(safe-area-inset-bottom));
+    margin-top: 12px;
+    position: sticky;
+    bottom: calc(72px + env(safe-area-inset-bottom));
+    background: var(--private-sidebar-bg);
+    padding-bottom: calc(10px + env(safe-area-inset-bottom));
   }
 }
