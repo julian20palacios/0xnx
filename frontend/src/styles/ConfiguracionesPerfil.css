@@ -3,7 +3,8 @@
   margin: 0 auto;
   display: flex;
   flex-direction: column;
-  gap: 24px;
+  gap: 16px;
+  padding: 2rem 0;
 }
 
 .config-header h1 {
@@ -13,72 +14,5 @@
 
 .config-header p {
   margin: 0;
-  opacity: 0.75;
-}
-
-.config-options {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-  gap: 16px;
-}
-
-.config-card {
-  display: flex;
-  align-items: center;
-  gap: 16px;
-  text-align: left;
-  padding: 16px;
-  border-radius: 14px;
-  border: 1px solid var(--private-border);
-  background: var(--private-surface);
-  color: var(--private-text);
-  cursor: pointer;
-  transition: border-color 0.15s ease, box-shadow 0.15s ease, background-color 0.15s ease, transform 0.15s ease;
-}
-
-.config-card:hover {
-  background: var(--private-surface-muted);
-  transform: translateY(-1px);
-}
-
-.config-card.is-active {
-  border-color: var(--private-text);
-  box-shadow: 0 0 0 2px var(--private-text) inset;
-}
-
-.config-swatch {
-  width: 46px;
-  height: 46px;
-  border-radius: 12px;
-  border: 1px solid var(--private-border);
-  flex-shrink: 0;
-}
-
-.swatch-white {
-  background: var(--color-white);
-}
-
-.swatch-gray {
-  background: var(--color-gray);
-}
-
-.swatch-black {
-  background: var(--color-black);
-}
-
-.config-meta {
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
-}
-
-.config-title {
-  margin: 0;
-  font-size: 18px;
-}
-
-.config-desc {
-  margin: 0;
-  font-size: 13px;
   opacity: 0.75;
 }

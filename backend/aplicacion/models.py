@@ -84,6 +84,7 @@ from datetime import timedelta
 
 from django.conf import settings
 from django.core.exceptions import ValidationError
+from django.core.validators import MinValueValidator, MaxValueValidator
 from django.db import models, transaction
 from django.db.models import F
 from django.db.models.signals import post_save
@@ -809,6 +810,73 @@ class ImagenGaleria(models.Model):
 
     def __str__(self):
         return self.titulo or f"Imagen {self.id_imagen}"
+
+
+# =========================================================
+# ENTRENAMIENTOS / TUTORIALES
+# =========================================================
+class Entrenamiento(models.Model):
+    id_jugada = models.AutoField(primary_key=True)
+    nombre_jugada = models.CharField(max_length=200)
+    nivel_dificultad = models.CharField(
+        max_length=20,
+        choices=[
+            ("novato", "Novato"),
+            ("intermedio", "Intermedio"),
+            ("avanzado", "Avanzado"),
+        ],
+        default="novato"
+    )
+    youtube_url = models.URLField(blank=True)
+    descripcion = models.TextField(blank=True)
+    consejos = models.TextField(blank=True)
+    numero_orden = models.PositiveIntegerField(default=1)
+    categoria = models.CharField(
+        max_length=120,
+        choices=[
+            ("yoyos", "Yoyos"),
+            ("ceros", "Ceros"),
+            ("fuerza", "Fuerza"),
+            ("entradas", "Entradas"),
+            ("giros", "Giros"),
+        ],
+        blank=True
+    )
+    requisitos_posteriores = models.TextField(blank=True)
+    realizado = models.BooleanField(default=False)
+
+    class Meta:
+        db_table = 'entrenamiento'
+        ordering = ['numero_orden']
+
+    def __str__(self):
+        return self.nombre_jugada
+
+
+class ComentarioTutorial(models.Model):
+    id_comentario = models.AutoField(primary_key=True)
+    usuario = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.CASCADE,
+        related_name="comentarios_tutoriales"
+    )
+    jugada = models.ForeignKey(
+        Entrenamiento,
+        on_delete=models.CASCADE,
+        related_name="comentarios"
+    )
+    comentario = models.TextField()
+    calificacion = models.PositiveSmallIntegerField(
+        validators=[MinValueValidator(1), MaxValueValidator(5)]
+    )
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        db_table = 'comentarios_tutoriales'
+        ordering = ['-created_at']
+
+    def __str__(self):
+        return f"{self.usuario} - {self.jugada} ({self.calificacion})"
 
 
 # =========================================================

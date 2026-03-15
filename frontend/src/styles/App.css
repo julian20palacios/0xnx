@@ -17,6 +17,11 @@ body,
   background-color: var(--app-bg);
 }
 
+.private-layout {
+  height: 100vh;
+  overflow: hidden;
+}
+
 .content-area {
   display: flex;
   flex: 1;
@@ -65,9 +70,29 @@ body,
   background: var(--private-bg);
 }
 
+.private-layout .private-shell {
+  height: 100%;
+}
+
+.private-layout .content-area {
+  height: 100%;
+}
+
+.private-theme .private-shell {
+  height: 100vh;
+  overflow: hidden;
+}
+
+.private-theme .content-area {
+  height: 100%;
+  overflow: hidden;
+}
+
 .private-theme .private-main {
   color: var(--private-text);
-  overflow-y: visible;
+  overflow-y: auto;
+  min-height: 0;
+  height: 100%;
   transition: background-color 0.25s ease, color 0.25s ease;
 }
 

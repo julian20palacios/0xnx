@@ -11,27 +11,22 @@ import Footer from "../components/layout/Footer";
 import Peliculas from "../components/pages/Peliculas";
 import ConfiguracionesPerfil from "../components/pages/ConfiguracionesPerfil";
 import RecuperarContrasena from "../components/pages/RecuperarContrasena";
-import { PrivateThemeProvider, usePrivateTheme } from "../context/PrivateThemeContext";
 
-const PrivateLayoutContent = ({ children }) => {
-  const { palette } = usePrivateTheme();
-
-  return (
-    <div className={`layout private-layout private-theme private-theme-${palette}`} style={{ minHeight: "100dvh" }}>
-      <div
-        className="private-shell"
-        style={{ display: "flex", minHeight: "100dvh", width: "100%", overflowX: "hidden", alignItems: "stretch" }}
-      >
-        <Sidebar />
-        <div className="content-area" style={{ flex: 1, minWidth: 0 }}>
-          <main className="private-main app-main" style={{ minHeight: "100%", minWidth: 0 }}>
-            {children}
-          </main>
-        </div>
+const PrivateLayoutContent = ({ children }) => (
+  <div className="layout private-layout private-theme private-theme-black" style={{ minHeight: "100dvh" }}>
+    <div
+      className="private-shell"
+      style={{ display: "flex", minHeight: "100dvh", width: "100%", overflowX: "hidden", alignItems: "stretch" }}
+    >
+      <Sidebar />
+      <div className="content-area" style={{ flex: 1, minWidth: 0 }}>
+        <main className="private-main app-main" style={{ minHeight: "100%", minWidth: 0 }}>
+          {children}
+        </main>
       </div>
     </div>
-  );
-};
+  </div>
+);
 
 const Layout = ({ children }) => {
   const location = useLocation();
@@ -48,9 +43,7 @@ const Layout = ({ children }) => {
 
   if (esRutaPrivada) {
     return (
-      <PrivateThemeProvider>
-        <PrivateLayoutContent>{children}</PrivateLayoutContent>
-      </PrivateThemeProvider>
+      <PrivateLayoutContent>{children}</PrivateLayoutContent>
     );
   }
 
