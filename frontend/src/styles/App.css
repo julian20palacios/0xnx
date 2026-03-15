@@ -78,6 +78,12 @@ body,
   height: 100%;
 }
 
+@media (max-width: 768px) {
+  .private-layout .private-shell {
+    padding-top: 48px;
+  }
+}
+
 .private-theme .private-shell {
   height: 100vh;
   overflow: hidden;
