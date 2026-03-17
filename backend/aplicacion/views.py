@@ -1,45 +1,29 @@
 from rest_framework.viewsets import ModelViewSet
-from .models import Categoria
-from .serializers import CategoriaSerializer
+from .models import Categoria, Entrenamiento
+from .serializers import CategoriaSerializer, EntrenamientoSerializer
 
 
 
 # Vista para validar el token de acceso
 from rest_framework.decorators import api_view, permission_classes
-from rest_framework.permissions import IsAuthenticated, DjangoModelPermissions, BasePermission, SAFE_METHODS
+from rest_framework.permissions import IsAuthenticated, DjangoModelPermissions
 from rest_framework.response import Response
+from .permissions import permissions_for_model, role_for_user
 
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
 def validar_token(request):
     return Response({'valid': True})
 
-def _categoria_permisos_por_grupo(user):
-    if not user or not user.is_authenticated:
-        return {"can_view": False, "can_add": False, "can_change": False, "can_delete": False}
-    if user.groups.filter(name="Admin").exists():
-        return {"can_view": True, "can_add": True, "can_change": True, "can_delete": True}
-    if user.groups.filter(name="User").exists():
-        return {"can_view": False, "can_add": False, "can_change": False, "can_delete": False}
-    return {"can_view": False, "can_add": False, "can_change": False, "can_delete": False}
-
-class CategoriaGroupPermissions(BasePermission):
-    def has_permission(self, request, view):
-        perms = _categoria_permisos_por_grupo(request.user)
-        if request.method in SAFE_METHODS:
-            return perms["can_view"]
-        if request.method == "POST":
-            return perms["can_add"]
-        if request.method in ("PUT", "PATCH"):
-            return perms["can_change"]
-        if request.method == "DELETE":
-            return perms["can_delete"]
-        return False
-
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
 def permisos_categoria(request):
-    return Response(_categoria_permisos_por_grupo(request.user))
+    return Response(permissions_for_model(request.user, Categoria))
+
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def permisos_usuario(request):
+    return Response(role_for_user(request.user))
 
 
 #Vista para el registro de usuarios de inicio de sesión
@@ -248,9 +232,13 @@ class PasswordResetVerifyView(APIView):
 class CategoriaViewSet(ModelViewSet):
     queryset = Categoria.objects.all().order_by('id_categoria')
     serializer_class = CategoriaSerializer
-    # Enforce Django model permissions: view/add/change/delete for Categoria.
-    # This also requires authentication by default.
-    permission_classes = [CategoriaGroupPermissions]
+    permission_classes = [DjangoModelPermissions]
+
+
+class EntrenamientoViewSet(ModelViewSet):
+    queryset = Entrenamiento.objects.all().order_by('numero_orden')
+    serializer_class = EntrenamientoSerializer
+    permission_classes = [DjangoModelPermissions]
 
 
 class RegisterFormView(APIView):

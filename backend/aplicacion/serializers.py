@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Categoria
+from .models import Categoria, Entrenamiento
 
 class CategoriaSerializer(serializers.ModelSerializer):
     class Meta:
@@ -9,9 +9,13 @@ class CategoriaSerializer(serializers.ModelSerializer):
             'id_categoria': {'required': False},  
         }
 
-
-
-
+class EntrenamientoSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Entrenamiento
+        fields = '__all__'
+        extra_kwargs = {
+            'id_jugada': {'required': False},
+        }
 
 #Serializer para el usuario personalizado de inicio de sesión
 from rest_framework import serializers
@@ -66,3 +70,5 @@ class RegisterFormSerializer(serializers.ModelSerializer):
         user.is_staff = False
         user.save()
         return user
+
+

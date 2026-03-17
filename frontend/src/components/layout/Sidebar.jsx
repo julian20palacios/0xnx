@@ -2,6 +2,8 @@ import React, { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import "../../styles/Sidebar.css";
 import login0xnx from "../../assets/images/login0xnx.jpg";
+import { getCalificarPath, getProgresoPath, getTutorialesPath } from "../../utils/rolePaths";
+import { useAuth } from "../../context/AuthContext";
 
 const Sidebar = () => {
   const [isCollapsed, setIsCollapsed] = useState(false);
@@ -35,6 +37,8 @@ const Sidebar = () => {
     return () => mq.removeListener(syncCollapse);
   }, []);
 
+  const { role, clearRole } = useAuth();
+
   const toggleSidebar = () => setIsCollapsed((prev) => !prev);
   const toggleMobileSidebar = () => setIsMobileOpen((prev) => !prev);
   const toggleSection = (key) =>
@@ -44,10 +48,14 @@ const Sidebar = () => {
   const handleLogout = () => {
     localStorage.removeItem("access");
     localStorage.removeItem("refresh");
+    clearRole();
     navigate("/iniciar-sesion");
   };
 
   const isSidebarVisible = !isMobile || isMobileOpen;
+  const tutorialesPath = getTutorialesPath(role);
+  const calificarPath = getCalificarPath(role);
+  const progresoPath = getProgresoPath(role);
 
   return (
     <>
@@ -130,14 +138,14 @@ const Sidebar = () => {
               <span className="sidebar-icon" aria-hidden="true">
                 <svg viewBox="0 0 24 24" role="img" focusable="false">
                   <path
-                    d="M4 6.5h16v11H4z"
+                    d="M5 6h14v12H5z"
                     fill="none"
                     stroke="currentColor"
                     strokeWidth="1.6"
                     strokeLinejoin="round"
                   />
                   <path
-                    d="M7 6.5l2 3m3-3l2 3m3-3l2 3"
+                    d="M8 9h8M8 12h8M8 15h5"
                     fill="none"
                     stroke="currentColor"
                     strokeWidth="1.6"
@@ -145,7 +153,7 @@ const Sidebar = () => {
                   />
                 </svg>
               </span>
-              <span className="sidebar-label">Peliculas</span>
+              <span className="sidebar-label">Tutoriales</span>
               <span className="sidebar-chevron" aria-hidden="true">
                 <svg className="sidebar-chevron-icon" viewBox="0 0 24 24" role="img" focusable="false">
                   <path
@@ -160,8 +168,27 @@ const Sidebar = () => {
               </span>
             </button>
             <div className="sidebar-submenu">
-              <Link to="/peliculas" className="sidebar-subitem">Listado</Link>
-              <Link to="/peliculas" className="sidebar-subitem">Favoritas</Link>
+              {tutorialesPath ? (
+                <Link to={tutorialesPath} className="sidebar-subitem">Tutoriales</Link>
+              ) : (
+                <button type="button" className="sidebar-subitem" disabled aria-disabled="true">
+                  Tutoriales
+                </button>
+              )}
+              {calificarPath ? (
+                <Link to={calificarPath} className="sidebar-subitem">Calificar</Link>
+              ) : (
+                <button type="button" className="sidebar-subitem" disabled aria-disabled="true">
+                  Calificar
+                </button>
+              )}
+              {progresoPath ? (
+                <Link to={progresoPath} className="sidebar-subitem">Progreso</Link>
+              ) : (
+                <button type="button" className="sidebar-subitem" disabled aria-disabled="true">
+                  Progreso
+                </button>
+              )}
             </div>
           </div>
 

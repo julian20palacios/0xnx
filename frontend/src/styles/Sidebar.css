@@ -318,11 +318,24 @@
   opacity: 0.8;
   padding: 6px 8px;
   border-radius: 8px;
+  background: transparent;
+  border: none;
+  width: 100%;
+  text-align: left;
+  display: block;
+  cursor: pointer;
+  appearance: none;
 }
 
 .sidebar-subitem:hover {
   background: var(--private-sidebar-hover);
   opacity: 1;
+}
+
+.sidebar-subitem:disabled,
+.sidebar-subitem[aria-disabled="true"] {
+  opacity: 0.6;
+  cursor: not-allowed;
 }
 
 .app-sidebar.collapsed .sidebar-label {

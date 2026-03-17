@@ -6,6 +6,8 @@ from .models import (
     CategoriaProducto,
     Compra,
     CompraItem,
+    ComentarioTutorial,
+    Entrenamiento,
     Evento,
     Horario,
     ImagenGaleria,
@@ -202,3 +204,19 @@ class ImagenGaleriaAdmin(admin.ModelAdmin):
     list_display = ('id_imagen', 'titulo', 'evento', 'fecha_publicacion', 'activo')
     list_filter = ('activo',)
     search_fields = ('titulo',)
+
+
+@admin.register(Entrenamiento)
+class EntrenamientoAdmin(admin.ModelAdmin):
+    list_display = ('id_jugada', 'nombre_jugada', 'nivel_dificultad', 'categoria', 'numero_orden', 'realizado')
+    list_filter = ('nivel_dificultad', 'categoria', 'realizado')
+    search_fields = ('nombre_jugada', 'descripcion', 'consejos', 'requisitos_posteriores')
+    ordering = ('numero_orden',)
+
+
+@admin.register(ComentarioTutorial)
+class ComentarioTutorialAdmin(admin.ModelAdmin):
+    list_display = ('id_comentario', 'usuario', 'jugada', 'calificacion', 'created_at')
+    list_filter = ('calificacion', 'created_at')
+    search_fields = ('usuario__email', 'usuario__username', 'jugada__nombre_jugada', 'comentario')
+    ordering = ('-created_at',)

@@ -6,32 +6,18 @@ import RegistroUser from "../components/pages/RegistroUser";
 import AuthenticatedHome from "../components/pages/AuthenticatedHome";
 import RutaProtegida from "../components/componentes/RutasProtegidas";
 import Navbar from "../components/layout/Navbar";
-import Sidebar from "../components/layout/Sidebar";
 import Footer from "../components/layout/Footer";
+import PrivateLayout from "../components/layout/PrivateLayout";
 import Peliculas from "../components/pages/Peliculas";
 import ConfiguracionesPerfil from "../components/pages/ConfiguracionesPerfil";
 import RecuperarContrasena from "../components/pages/RecuperarContrasena";
-
-const PrivateLayoutContent = ({ children }) => (
-  <div className="layout private-layout private-theme private-theme-black" style={{ minHeight: "100dvh" }}>
-    <div
-      className="private-shell"
-      style={{ display: "flex", minHeight: "100dvh", width: "100%", overflowX: "hidden", alignItems: "stretch" }}
-    >
-      <Sidebar />
-      <div className="content-area" style={{ flex: 1, minWidth: 0 }}>
-        <main className="private-main app-main" style={{ minHeight: "100%", minWidth: 0 }}>
-          {children}
-        </main>
-      </div>
-    </div>
-  </div>
-);
+import EntrenamientoAdmin from "../components/pages/tutoriales/EntrenamientoAdmin";
+import EntrenamientoUser from "../components/pages/tutoriales/EntrenamientoUser";
 
 const Layout = ({ children }) => {
   const location = useLocation();
 
-  const rutasPrivadas = ["/home", "/peliculas", "/configuraciones-perfil"];
+  const rutasPrivadas = ["/home", "/peliculas", "/configuraciones-perfil", "/admin", "/user"];
   const esRutaPrivada = rutasPrivadas.some((ruta) =>
     location.pathname.startsWith(ruta)
   );
@@ -43,7 +29,7 @@ const Layout = ({ children }) => {
 
   if (esRutaPrivada) {
     return (
-      <PrivateLayoutContent>{children}</PrivateLayoutContent>
+      <PrivateLayout>{children}</PrivateLayout>
     );
   }
 
@@ -121,6 +107,26 @@ const Rutas = () => (
           <RutaProtegida>
             <Layout>
               <ConfiguracionesPerfil />
+            </Layout>
+          </RutaProtegida>
+        }
+      />
+      <Route
+        path="/admin/tutoriales"
+        element={
+          <RutaProtegida roles={["admin"]}>
+            <Layout>
+              <EntrenamientoAdmin />
+            </Layout>
+          </RutaProtegida>
+        }
+      />
+      <Route
+        path="/user/tutoriales"
+        element={
+          <RutaProtegida roles={["user"]}>
+            <Layout>
+              <EntrenamientoUser />
             </Layout>
           </RutaProtegida>
         }
