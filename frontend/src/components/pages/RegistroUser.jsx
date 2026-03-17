@@ -3,6 +3,7 @@ import { useNavigate, Link } from 'react-router-dom';
 import { registrarUsuario } from '../../api/RegistroUser';
 import '../../styles/RegistroUser.css';
 import login0xnx from '../../assets/images/login0xnx.jpg';
+import { useAuth } from '../../context/AuthContext';
 
 const RegistroUser = () => {
   const [form, setForm] = useState({
@@ -16,6 +17,7 @@ const RegistroUser = () => {
   });
   const [error, setError] = useState('');
   const navigate = useNavigate();
+  const { refreshRole, refreshUser } = useAuth();
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -40,6 +42,7 @@ const RegistroUser = () => {
       if (data.access && data.refresh) {
         localStorage.setItem('access', data.access);
         localStorage.setItem('refresh', data.refresh);
+        await Promise.all([refreshRole(), refreshUser()]);
         navigate('/home');
       } else {
         navigate('/iniciar-sesion');

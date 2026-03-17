@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import {
   obtenerEntrenamientos,
   crearEntrenamiento,
@@ -9,6 +9,7 @@ import {
 const emptyForm = {
   nombre_jugada: '',
   nivel_dificultad: 'novato',
+  url_jugada: '',
   youtube_url: '',
   descripcion: '',
   consejos: '',
@@ -24,6 +25,14 @@ const Entrenamiento = () => {
   const [editId, setEditId] = useState(null);
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
+
+  const nextOrder = useMemo(() => {
+    const numbers = entrenamientos
+      .map((item) => Number(item.numero_orden))
+      .filter((value) => Number.isFinite(value));
+    const maxOrder = numbers.length ? Math.max(...numbers) : 0;
+    return maxOrder + 1;
+  }, [entrenamientos]);
 
   const cargarEntrenamientos = async () => {
     setLoading(true);
@@ -42,6 +51,12 @@ const Entrenamiento = () => {
     cargarEntrenamientos();
   }, []);
 
+  useEffect(() => {
+    if (!editId) {
+      setForm((prev) => ({ ...prev, numero_orden: nextOrder }));
+    }
+  }, [editId, nextOrder]);
+
   const handleChange = (e) => {
     const { name, type, value, checked } = e.target;
     let nextValue = type === 'checkbox' ? checked : value;
@@ -53,7 +68,7 @@ const Entrenamiento = () => {
   };
 
   const resetForm = () => {
-    setForm(emptyForm);
+    setForm({ ...emptyForm, numero_orden: nextOrder });
     setEditId(null);
   };
 
@@ -68,7 +83,7 @@ const Entrenamiento = () => {
       if (editId) {
         await actualizarEntrenamiento(editId, form);
       } else {
-        await crearEntrenamiento(form);
+        await crearEntrenamiento({ ...form, numero_orden: nextOrder });
       }
       resetForm();
       await cargarEntrenamientos();
@@ -82,6 +97,7 @@ const Entrenamiento = () => {
     setForm({
       nombre_jugada: item.nombre_jugada || '',
       nivel_dificultad: item.nivel_dificultad || 'novato',
+      url_jugada: item.url_jugada || '',
       youtube_url: item.youtube_url || '',
       descripcion: item.descripcion || '',
       consejos: item.consejos || '',
@@ -148,6 +164,18 @@ const Entrenamiento = () => {
             value={form.numero_orden}
             onChange={handleChange}
             min="1"
+            readOnly={!editId}
+          />
+        </div>
+
+        <div>
+          <label>URL de la jugada</label>
+          <input
+            type="url"
+            name="url_jugada"
+            value={form.url_jugada}
+            onChange={handleChange}
+            placeholder="https://..."
           />
         </div>
 

@@ -164,7 +164,7 @@
 }
 
 .sidebar-profile-email {
-  font-size: 12px;
+  font-size: 10px;
   opacity: 0.7;
   white-space: nowrap;
   overflow: hidden;
@@ -364,11 +364,18 @@
   height: 38px;
   border-radius: 999px;
   cursor: pointer;
-  font-size: 18px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .sidebar-toggle:hover {
   background: var(--private-surface);
+}
+
+.sidebar-toggle svg {
+  width: 18px;
+  height: 18px;
 }
 
 @media (max-width: 768px) {

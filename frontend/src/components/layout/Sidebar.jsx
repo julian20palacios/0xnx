@@ -37,7 +37,7 @@ const Sidebar = () => {
     return () => mq.removeListener(syncCollapse);
   }, []);
 
-  const { role, clearRole } = useAuth();
+  const { role, clearRole, user } = useAuth();
 
   const toggleSidebar = () => setIsCollapsed((prev) => !prev);
   const toggleMobileSidebar = () => setIsMobileOpen((prev) => !prev);
@@ -56,6 +56,9 @@ const Sidebar = () => {
   const tutorialesPath = getTutorialesPath(role);
   const calificarPath = getCalificarPath(role);
   const progresoPath = getProgresoPath(role);
+
+  const displayName = user?.username || "Cargando...";
+  const displayEmail = user?.email || "Cargando...";
 
   return (
     <>
@@ -306,8 +309,8 @@ const Sidebar = () => {
           >
             <img className="sidebar-profile-avatar" src={login0xnx} alt="Usuario" />
             <div className="sidebar-profile-meta">
-              <span className="sidebar-profile-name">julixn</span>
-              <span className="sidebar-profile-email">julixn@gmail.com</span>
+              <span className="sidebar-profile-name">{displayName}</span>
+              <span className="sidebar-profile-email">{displayEmail}</span>
             </div>
             <span className="sidebar-profile-chevron" aria-hidden="true">
               <svg viewBox="0 0 24 24" role="img" focusable="false">
@@ -432,7 +435,16 @@ const Sidebar = () => {
               onClick={toggleSidebar}
               aria-label={isCollapsed ? "Expandir sidebar" : "Colapsar sidebar"}
             >
-              ?
+              <svg viewBox="0 0 24 24" role="img" focusable="false" aria-hidden="true">
+                <path
+                  d={isCollapsed ? "M9 6l6 6-6 6" : "M15 6l-6 6 6 6"}
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="1.8"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                />
+              </svg>
             </button>
           </div>
         )}

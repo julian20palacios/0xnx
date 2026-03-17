@@ -1,16 +1,22 @@
 import React, { createContext, useCallback, useContext, useEffect, useMemo, useState } from "react";
 import { obtenerPermisosUsuario } from "../api/Permisos";
+import { obtenerUsuarioActual } from "../api/Usuario";
 
 const AuthContext = createContext({
   role: null,
   roleLoading: true,
+  user: null,
+  userLoading: true,
   refreshRole: async () => {},
+  refreshUser: async () => {},
   clearRole: () => {},
 });
 
 export const AuthProvider = ({ children }) => {
   const [role, setRole] = useState(null);
   const [roleLoading, setRoleLoading] = useState(true);
+  const [user, setUser] = useState(null);
+  const [userLoading, setUserLoading] = useState(true);
 
   const refreshRole = useCallback(async () => {
     const token = localStorage.getItem("access");
@@ -32,18 +38,41 @@ export const AuthProvider = ({ children }) => {
     }
   }, []);
 
+  const refreshUser = useCallback(async () => {
+    const token = localStorage.getItem("access");
+    if (!token) {
+      setUser(null);
+      setUserLoading(false);
+      return;
+    }
+
+    setUserLoading(true);
+    try {
+      const data = await obtenerUsuarioActual();
+      setUser(data || null);
+    } catch (error) {
+      console.error("Error al cargar usuario:", error);
+      setUser(null);
+    } finally {
+      setUserLoading(false);
+    }
+  }, []);
+
   const clearRole = useCallback(() => {
     setRole(null);
     setRoleLoading(false);
+    setUser(null);
+    setUserLoading(false);
   }, []);
 
   useEffect(() => {
     refreshRole();
-  }, [refreshRole]);
+    refreshUser();
+  }, [refreshRole, refreshUser]);
 
   const value = useMemo(
-    () => ({ role, roleLoading, refreshRole, clearRole }),
-    [role, roleLoading, refreshRole, clearRole]
+    () => ({ role, roleLoading, user, userLoading, refreshRole, refreshUser, clearRole }),
+    [role, roleLoading, user, userLoading, refreshRole, refreshUser, clearRole]
   );
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;

@@ -1,6 +1,7 @@
 from rest_framework.viewsets import ModelViewSet
-from .models import Categoria, Entrenamiento
-from .serializers import CategoriaSerializer, EntrenamientoSerializer
+from .models import Categoria, Entrenamiento, ComentarioTutorial
+from .serializers import CategoriaSerializer, EntrenamientoSerializer, ComentarioTutorialSerializer
+from django.db.models import Avg, Count
 
 
 
@@ -9,6 +10,7 @@ from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import IsAuthenticated, DjangoModelPermissions
 from rest_framework.response import Response
 from .permissions import permissions_for_model, role_for_user
+from rest_framework.exceptions import ValidationError, PermissionDenied
 
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
@@ -25,6 +27,15 @@ def permisos_categoria(request):
 def permisos_usuario(request):
     return Response(role_for_user(request.user))
 
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def usuario_actual(request):
+    user = request.user
+    return Response({
+        "username": user.username,
+        "email": user.email,
+    })
+
 
 #Vista para el registro de usuarios de inicio de sesión
 from rest_framework.views import APIView
@@ -35,6 +46,9 @@ from django.contrib.auth import get_user_model
 from django.contrib.auth.models import Group
 from rest_framework.permissions import AllowAny
 from rest_framework_simplejwt.tokens import RefreshToken
+from rest_framework_simplejwt.views import TokenObtainPairView
+from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
+from rest_framework.exceptions import AuthenticationFailed
 from django.utils import timezone
 from datetime import timedelta
 import secrets
@@ -47,6 +61,23 @@ from google.oauth2 import id_token as google_id_token
 from google.auth.transport import requests as google_requests
 import re
 User = get_user_model()
+
+
+class CustomTokenObtainPairSerializer(TokenObtainPairSerializer):
+    def validate(self, attrs):
+        email = (attrs.get("email") or "").strip()
+        if email:
+            user = User.objects.filter(email__iexact=email).first()
+            if user and not user.has_usable_password():
+                raise AuthenticationFailed(
+                    "Por favor ingresa con Google, debido a que fue registrado de esa manera.",
+                    code="no_password",
+                )
+        return super().validate(attrs)
+
+
+class CustomTokenObtainPairView(TokenObtainPairView):
+    serializer_class = CustomTokenObtainPairSerializer
 
 
 def _generate_unique_username(email):
@@ -129,6 +160,13 @@ class PasswordResetRequestView(APIView):
             return Response({"detail": "El correo es obligatorio."}, status=status.HTTP_400_BAD_REQUEST)
 
         user = User.objects.filter(email__iexact=email).first()
+        if user and not user.has_usable_password():
+            return Response(
+                {
+                    "detail": "Este correo no tiene cambio de contrasena porque la cuenta se creo con Google. Ingresa con Google."
+                },
+                status=status.HTTP_400_BAD_REQUEST,
+            )
         if user:
             PasswordResetCode.objects.filter(user=user, used=False).update(used=True)
             code = f"{secrets.randbelow(1000000):06d}"
@@ -165,6 +203,13 @@ class PasswordResetConfirmView(APIView):
         user = User.objects.filter(email__iexact=email).first()
         if not user:
             return Response({"detail": "Codigo invalido o expirado."}, status=status.HTTP_400_BAD_REQUEST)
+        if not user.has_usable_password():
+            return Response(
+                {
+                    "detail": "Este correo no tiene cambio de contrasena porque la cuenta se creo con Google. Ingresa con Google."
+                },
+                status=status.HTTP_400_BAD_REQUEST,
+            )
 
         reset_code = (
             PasswordResetCode.objects.filter(
@@ -208,6 +253,13 @@ class PasswordResetVerifyView(APIView):
         user = User.objects.filter(email__iexact=email).first()
         if not user:
             return Response({"detail": "Codigo invalido o expirado."}, status=status.HTTP_400_BAD_REQUEST)
+        if not user.has_usable_password():
+            return Response(
+                {
+                    "detail": "Este correo no tiene cambio de contrasena porque la cuenta se creo con Google. Ingresa con Google."
+                },
+                status=status.HTTP_400_BAD_REQUEST,
+            )
 
         reset_code = (
             PasswordResetCode.objects.filter(
@@ -236,9 +288,47 @@ class CategoriaViewSet(ModelViewSet):
 
 
 class EntrenamientoViewSet(ModelViewSet):
-    queryset = Entrenamiento.objects.all().order_by('numero_orden')
     serializer_class = EntrenamientoSerializer
     permission_classes = [DjangoModelPermissions]
+
+    def get_queryset(self):
+        return (
+            Entrenamiento.objects.all()
+            .order_by('numero_orden')
+            .annotate(
+                calificacion_promedio=Avg('comentarios__calificacion'),
+                calificaciones_total=Count('comentarios', distinct=True),
+            )
+        )
+
+
+class ComentarioTutorialViewSet(ModelViewSet):
+    serializer_class = ComentarioTutorialSerializer
+    permission_classes = [IsAuthenticated]
+
+    def get_queryset(self):
+        qs = ComentarioTutorial.objects.select_related('usuario', 'jugada').order_by('-created_at')
+        jugada_id = self.request.query_params.get('jugada')
+        if jugada_id:
+            qs = qs.filter(jugada_id=jugada_id)
+        return qs
+
+    def perform_create(self, serializer):
+        jugada = serializer.validated_data.get('jugada')
+        if ComentarioTutorial.objects.filter(jugada=jugada, usuario=self.request.user).exists():
+            raise ValidationError({"detail": "Ya calificaste esta jugada."})
+        serializer.save(usuario=self.request.user)
+
+    def perform_update(self, serializer):
+        comentario = self.get_object()
+        if comentario.usuario_id != self.request.user.id:
+            raise PermissionDenied("No puedes editar este comentario.")
+        serializer.save()
+
+    def perform_destroy(self, instance):
+        if instance.usuario_id != self.request.user.id:
+            raise PermissionDenied("No puedes eliminar este comentario.")
+        instance.delete()
 
 
 class RegisterFormView(APIView):

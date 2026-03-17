@@ -201,13 +201,15 @@ const RecuperarContrasena = () => {
             <form className="reset-form" onSubmit={handleRequest} noValidate>
               <label className="reset-field">
                 <span>Correo electronico</span>
-                <input
-                  type="email"
-                  value={email}
-                  onChange={(event) => setEmail(event.target.value)}
-                  placeholder="nombre@empresa.com"
-                  required
-                />
+              <input
+                type="email"
+                name="email"
+                value={email}
+                onChange={(event) => setEmail(event.target.value)}
+                placeholder="nombre@empresa.com"
+                autoComplete="email"
+                required
+              />
               </label>
               {error && (
                 <p className="reset-error" role="alert" aria-live="polite">

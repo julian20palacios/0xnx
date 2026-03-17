@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Categoria, Entrenamiento
+from .models import Categoria, Entrenamiento, ComentarioTutorial
 
 class CategoriaSerializer(serializers.ModelSerializer):
     class Meta:
@@ -10,12 +10,55 @@ class CategoriaSerializer(serializers.ModelSerializer):
         }
 
 class EntrenamientoSerializer(serializers.ModelSerializer):
+    calificacion_promedio = serializers.FloatField(read_only=True)
+    calificaciones_total = serializers.IntegerField(read_only=True)
+
     class Meta:
         model = Entrenamiento
-        fields = '__all__'
+        fields = (
+            'id_jugada',
+            'nombre_jugada',
+            'nivel_dificultad',
+            'youtube_url',
+            'url_jugada',
+            'descripcion',
+            'consejos',
+            'numero_orden',
+            'categoria',
+            'requisitos_posteriores',
+            'realizado',
+            'calificacion_promedio',
+            'calificaciones_total',
+        )
         extra_kwargs = {
             'id_jugada': {'required': False},
         }
+
+
+class ComentarioTutorialSerializer(serializers.ModelSerializer):
+    usuario_nombre = serializers.SerializerMethodField()
+    usuario_email = serializers.EmailField(source='usuario.email', read_only=True)
+    usuario_username = serializers.CharField(source='usuario.username', read_only=True)
+
+    class Meta:
+        model = ComentarioTutorial
+        fields = (
+            'id_comentario',
+            'jugada',
+            'comentario',
+            'calificacion',
+            'created_at',
+            'usuario',
+            'usuario_nombre',
+            'usuario_email',
+            'usuario_username',
+        )
+        extra_kwargs = {
+            'usuario': {'read_only': True},
+        }
+
+    def get_usuario_nombre(self, obj):
+        return obj.usuario.username or obj.usuario.email
 
 #Serializer para el usuario personalizado de inicio de sesión
 from rest_framework import serializers
@@ -70,5 +113,3 @@ class RegisterFormSerializer(serializers.ModelSerializer):
         user.is_staff = False
         user.save()
         return user
-
-

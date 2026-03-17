@@ -3,6 +3,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { loginGoogle, loginUsuario } from '../../api/Login';
 import "../../styles/InicioSesion.css";
 import login0xnx from "../../assets/images/login0xnx.jpg";
+import { useAuth } from '../../context/AuthContext';
 
 const IniciarSesion = () => {
   const [email, setEmail] = useState('');
@@ -11,6 +12,7 @@ const IniciarSesion = () => {
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
+  const { refreshRole, refreshUser } = useAuth();
   const googleButtonRef = useRef(null);
   const googleInitialized = useRef(false);
   const googleClientId = import.meta.env.VITE_GOOGLE_CLIENT_ID;
@@ -23,6 +25,7 @@ const IniciarSesion = () => {
       const data = await loginUsuario(email.trim(), password);
       localStorage.setItem('access', data.access);
       localStorage.setItem('refresh', data.refresh);
+      await Promise.all([refreshRole(), refreshUser()]);
       navigate('/home');
     } catch (err) {
       setError('Correo o contraseña incorrectos');
@@ -42,6 +45,7 @@ const IniciarSesion = () => {
       const data = await loginGoogle(response.credential);
       localStorage.setItem('access', data.access);
       localStorage.setItem('refresh', data.refresh);
+      await Promise.all([refreshRole(), refreshUser()]);
       navigate('/home');
     } catch (err) {
       setError(err?.message || 'No se pudo iniciar sesión con Google.');
@@ -130,7 +134,7 @@ const IniciarSesion = () => {
               <input
                 type="email"
                 name="email"
-                autoComplete="username"
+                autoComplete="email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 placeholder="nombre@empresa.com"

@@ -818,6 +818,7 @@ class ImagenGaleria(models.Model):
 class Entrenamiento(models.Model):
     id_jugada = models.AutoField(primary_key=True)
     nombre_jugada = models.CharField(max_length=200)
+    url_jugada = models.URLField(blank=True, null=True)
     nivel_dificultad = models.CharField(
         max_length=20,
         choices=[

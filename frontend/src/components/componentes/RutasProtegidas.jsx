@@ -11,7 +11,7 @@ const RutaProtegida = ({ children, roles }) => {
   const [autenticado, setAutenticado] = useState(null); // null = aun cargando
   const [autorizado, setAutorizado] = useState(null);
   const token = localStorage.getItem('access');
-  const { role, roleLoading, refreshRole } = useAuth();
+  const { role, roleLoading, refreshRole, refreshUser } = useAuth();
 
   useEffect(() => {
     const verificarToken = async () => {
@@ -52,6 +52,10 @@ const RutaProtegida = ({ children, roles }) => {
         setAutorizado(null);
         return;
       }
+      if (role === 'admin') {
+        setAutorizado(true);
+        return;
+      }
       setAutorizado(Boolean(role && roles.includes(role)));
     };
 
@@ -66,8 +70,9 @@ const RutaProtegida = ({ children, roles }) => {
   useEffect(() => {
     if (token) {
       refreshRole();
+      refreshUser();
     }
-  }, [token, refreshRole]);
+  }, [token, refreshRole, refreshUser]);
 
   if (autenticado === null || (roles && autorizado === null)) {
     return <div>Cargando...</div>; // puedes poner un spinner o algo similar
