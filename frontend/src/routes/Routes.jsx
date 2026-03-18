@@ -33,6 +33,11 @@ const Layout = ({ children }) => {
     location.pathname === ruta || location.pathname.startsWith(`${ruta}/`)
   );
 
+  const rutasSinFooter = ["/iniciar-sesion"];
+  const esSinFooter = rutasSinFooter.some((ruta) =>
+    location.pathname === ruta || location.pathname.startsWith(`${ruta}/`)
+  );
+
   if (esRutaPrivada) {
     return (
       <PrivateLayout>{children}</PrivateLayout>
@@ -47,7 +52,7 @@ const Layout = ({ children }) => {
           {children}
         </main>
       </div>
-      <Footer />
+      {!esSinFooter && <Footer />}
     </div>
   );
 };

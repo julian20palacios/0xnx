@@ -220,9 +220,7 @@ const IniciarSesion = () => {
             <Link to="/recuperar-contrasena">Recuperar contraseña</Link>
           </div>
 
-          <div className="login-footer">
-            <Link to="/">Volver al inicio</Link>
-          </div>
+          {/* Footer eliminado según solicitud */}
         </main>
       </div>
     </div>
