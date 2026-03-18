@@ -1,9 +1,9 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { loginGoogle, loginUsuario } from '../../api/Login';
-import "../../styles/InicioSesion.css";
-import login0xnx from "../../assets/images/login0xnx.jpg";
-import { useAuth } from '../../context/AuthContext';
+import { loginGoogle, loginUsuario } from '../../../api/Login';
+import "../../../styles/InicioSesion.css";
+import login0xnx from "../../../assets/images/login0xnx.jpg";
+import { useAuth } from '../../../context/AuthContext';
 
 const IniciarSesion = () => {
   const [email, setEmail] = useState('');
@@ -73,10 +73,10 @@ const IniciarSesion = () => {
         });
         googleInitialized.current = true;
       }
-      const buttonWidth = Math.max(
-        260,
-        Math.floor(googleButtonRef.current.offsetWidth || 0)
+      const containerWidth = Math.floor(
+        googleButtonRef.current.getBoundingClientRect().width || 0
       );
+      const buttonWidth = Math.min(400, Math.max(260, containerWidth));
       googleButtonRef.current.innerHTML = '';
       window.google.accounts.id.renderButton(googleButtonRef.current, {
         theme: 'filled_black',
@@ -230,3 +230,5 @@ const IniciarSesion = () => {
 };
 
 export default IniciarSesion;
+
+

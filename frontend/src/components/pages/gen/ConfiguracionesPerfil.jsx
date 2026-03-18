@@ -1,5 +1,5 @@
 import React from "react";
-import "../../styles/ConfiguracionesPerfil.css";
+import "../../../styles/ConfiguracionesPerfil.css";
 
 const ConfiguracionesPerfil = () => {
   return (
@@ -13,3 +13,5 @@ const ConfiguracionesPerfil = () => {
 };
 
 export default ConfiguracionesPerfil;
+
+

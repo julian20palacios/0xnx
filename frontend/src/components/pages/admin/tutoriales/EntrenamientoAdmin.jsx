@@ -1,10 +1,11 @@
 import React, { useEffect, useMemo, useState } from 'react';
+import { Link } from 'react-router-dom';
 import {
   obtenerEntrenamientos,
   crearEntrenamiento,
   actualizarEntrenamiento,
   eliminarEntrenamiento,
-} from '../../../api/Entrenamiento';
+} from '../../../../api/Entrenamiento';
 
 const emptyForm = {
   nombre_jugada: '',
@@ -122,6 +123,7 @@ const Entrenamiento = () => {
   return (
     <div>
       <h1>Gestion de Entrenamientos</h1>
+      <Link to="/tutoriales/categorias">Volver</Link>
 
       <form onSubmit={handleSubmit}>
         <div>

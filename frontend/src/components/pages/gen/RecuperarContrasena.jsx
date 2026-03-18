@@ -4,9 +4,9 @@ import {
   confirmPasswordReset,
   requestPasswordReset,
   verifyPasswordResetCode,
-} from "../../api/PasswordReset";
-import "../../styles/RecuperarContrasena.css";
-import login0xnx from "../../assets/images/login0xnx.jpg";
+} from "../../../api/PasswordReset";
+import "../../../styles/RecuperarContrasena.css";
+import login0xnx from "../../../assets/images/login0xnx.jpg";
 
 const RecuperarContrasena = () => {
   const [step, setStep] = useState("request");
@@ -237,3 +237,5 @@ const RecuperarContrasena = () => {
 };
 
 export default RecuperarContrasena;
+
+

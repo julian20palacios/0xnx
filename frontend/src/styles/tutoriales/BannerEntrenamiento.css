@@ -1,0 +1,171 @@
+@import url("https://fonts.googleapis.com/css2?family=Manrope:wght@400;600;700&family=Space+Grotesk:wght@500;600;700&display=swap");
+
+.banner-training {
+  --banner-bg: oklch(6.72% 0.00001 271.152 / 0.747);
+  --banner-surface: oklch(0.245 0 0);
+  --banner-surface-muted: oklch(0.269 0 0);
+  --banner-text: oklch(0.985 0 0);
+  --banner-muted: oklch(0.708 0 0);
+  --banner-border: oklch(1 0 0 / 10%);
+  --banner-border-strong: oklch(1 0 0 / 18%);
+  --banner-shadow: oklch(0 0 0 / 0.85);
+  min-height: 100vh;
+  padding: clamp(2rem, 4vw, 4.5rem);
+  background: var(--banner-bg);
+  color: var(--banner-text);
+  font-family: "Arial", "Manrope", "Space Grotesk", system-ui, sans-serif;
+}
+
+.banner-training__container {
+  width: min(1100px, 100%);
+  margin: 0 auto;
+  display: grid;
+  gap: clamp(1.75rem, 2.5vw, 2.75rem);
+}
+
+.banner-training__hero {
+  position: relative;
+  padding: clamp(2rem, 4vw, 3.5rem);
+  border-radius: 28px;
+  background: var(--banner-surface);
+  border: 1px solid var(--banner-border);
+  box-shadow: 0 30px 60px -45px var(--banner-shadow);
+  overflow: hidden;
+  animation: bannerFade 0.7s ease-out both;
+}
+
+.banner-training__hero-content {
+  position: relative;
+  z-index: 2;
+  display: grid;
+  gap: 0.85rem;
+}
+
+.banner-training__title {
+  margin: 0;
+  font-family: "Space Grotesk", "Manrope", "Arial", sans-serif;
+  font-size: clamp(2rem, 4vw, 3.2rem);
+  letter-spacing: 0.02em;
+}
+
+.banner-training__subtitle {
+  margin: 0;
+  color: var(--banner-muted);
+  font-size: 1rem;
+  max-width: 520px;
+}
+
+.banner-training__hero-glow {
+  position: absolute;
+  inset: -40% 0 0 50%;
+  display: none;
+}
+
+.banner-training__cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 1rem;
+}
+
+.banner-training__card {
+  padding: 1.4rem 1.5rem;
+  border-radius: 18px;
+  background: color-mix(in oklab, var(--banner-surface), transparent 8%);
+  border: 1px solid var(--banner-border);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  font-weight: 700;
+  font-size: 0.85rem;
+  color: color-mix(in oklab, var(--banner-text), transparent 10%);
+  transition: transform 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease, background-color 0.2s ease;
+  animation: cardRise 0.6s ease-out both;
+  text-decoration: none;
+}
+
+.banner-training__card:nth-child(1) { animation-delay: 0.05s; }
+.banner-training__card:nth-child(2) { animation-delay: 0.1s; }
+.banner-training__card:nth-child(3) { animation-delay: 0.15s; }
+.banner-training__card:nth-child(4) { animation-delay: 0.2s; }
+
+.banner-training__card:hover {
+  transform: translateY(-6px);
+  border-color: var(--banner-border-strong);
+  background: color-mix(in oklab, var(--banner-surface-muted), transparent 8%);
+  box-shadow: 0 18px 30px -22px var(--banner-shadow);
+}
+
+.banner-training__card-label {
+  font-family: "Space Grotesk", "Manrope", "Arial", sans-serif;
+}
+
+.banner-training__list {
+  padding: 1.5rem 1.75rem;
+  border-radius: 18px;
+  background: color-mix(in oklab, var(--banner-surface), transparent 12%);
+  border: 1px dashed var(--banner-border-strong);
+  display: grid;
+  gap: 0.6rem;
+}
+
+.banner-training__list h2 {
+  margin: 0;
+  font-size: 1.2rem;
+  font-family: "Space Grotesk", "Manrope", "Arial", sans-serif;
+}
+
+.banner-training__list p {
+  margin: 0;
+  color: var(--banner-muted);
+  font-size: 0.95rem;
+}
+
+.banner-training__cta {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.75rem 1.35rem;
+  border-radius: 999px;
+  background: linear-gradient(
+    160deg,
+    color-mix(in oklab, var(--banner-text), var(--banner-surface) 15%),
+    color-mix(in oklab, var(--banner-text), transparent 10%)
+  );
+  color: oklch(0.205 0 0);
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  font-size: 0.78rem;
+  text-decoration: none;
+  box-shadow: 0 16px 28px -18px var(--banner-shadow);
+  transition: transform 0.2s ease, box-shadow 0.2s ease, filter 0.2s ease, background-color 0.2s ease;
+  width: fit-content;
+}
+
+.banner-training__cta:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 20px 32px -18px var(--banner-shadow);
+  filter: brightness(1.02);
+}
+
+@keyframes bannerFade {
+  from { opacity: 0; transform: translateY(12px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes cardRise {
+  from { opacity: 0; transform: translateY(12px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@media (max-width: 768px) {
+  .banner-training {
+    padding: 1.75rem 1.25rem 3rem;
+  }
+
+  .banner-training__hero {
+    border-radius: 22px;
+  }
+}

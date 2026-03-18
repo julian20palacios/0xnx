@@ -1,5 +1,5 @@
 import React from 'react';
-import "../../styles/IndexHome.css";
+import "../../../styles/IndexHome.css";
 
 const Index = () => {
   return (
@@ -149,3 +149,5 @@ const Index = () => {
 };
 
 export default Index;
+
+

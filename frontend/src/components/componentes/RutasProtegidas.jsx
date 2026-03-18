@@ -1,7 +1,7 @@
 // src/components/RutaProtegida.jsx
 import React, { useEffect, useState } from 'react';
 import { Navigate } from 'react-router-dom';
-import AccesoDenegado from '../pages/AccesoDenegado';
+import AccesoDenegado from '../pages/gen/AccesoDenegado';
 import PrivateLayout from '../layout/PrivateLayout';
 import { useAuth } from '../../context/AuthContext';
 

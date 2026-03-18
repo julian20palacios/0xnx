@@ -1,5 +1,5 @@
 import React from 'react';
-import '../../styles/Index.css';
+import '../../../styles/Index.css';
 
 const Peliculas = () => {
   // Array de películas para generar contenido dinámico
@@ -374,3 +374,4 @@ const styles = {
 };
 
 export default Peliculas;
+

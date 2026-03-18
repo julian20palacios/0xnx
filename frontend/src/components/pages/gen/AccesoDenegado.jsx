@@ -14,3 +14,5 @@ const AccesoDenegado = () => {
 };
 
 export default AccesoDenegado;
+
+

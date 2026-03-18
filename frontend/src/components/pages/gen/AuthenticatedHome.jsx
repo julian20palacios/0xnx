@@ -6,7 +6,7 @@ import {
   crearCategoria,
   actualizarCategoria,
   eliminarCategoria
-} from '../../api/Categorias';
+} from '../../../api/Categorias';
 import { useNavigate } from 'react-router-dom';
 
 const AuthenticatedHome = () => {
@@ -151,3 +151,5 @@ const AuthenticatedHome = () => {
   );
 };
 export default AuthenticatedHome;
+
+

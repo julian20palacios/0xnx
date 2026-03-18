@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import "../../styles/Sidebar.css";
 import login0xnx from "../../assets/images/login0xnx.jpg";
-import { getCalificarPath, getProgresoPath, getTutorialesPath } from "../../utils/rolePaths";
+import { getProgresoPath, getTutorialesPath } from "../../utils/rolePaths";
 import { useAuth } from "../../context/AuthContext";
 
 const Sidebar = () => {
@@ -54,11 +54,9 @@ const Sidebar = () => {
 
   const isSidebarVisible = !isMobile || isMobileOpen;
   const tutorialesPath = getTutorialesPath(role);
-  const calificarPath = getCalificarPath(role);
   const progresoPath = getProgresoPath(role);
 
   const displayName = user?.username || "Cargando...";
-  const displayEmail = user?.email || "Cargando...";
 
   return (
     <>
@@ -91,7 +89,7 @@ const Sidebar = () => {
         }`}
       >
         <nav className="sidebar-nav">
-          <p className="sidebar-section-title">Plataforma</p>
+          <p className="sidebar-section-title">Gimbarr</p>
           <div className={`sidebar-group ${openSections.home ? "is-open" : ""}`}>
             <button
               type="button"
@@ -178,13 +176,7 @@ const Sidebar = () => {
                   Tutoriales
                 </button>
               )}
-              {calificarPath ? (
-                <Link to={calificarPath} className="sidebar-subitem">Calificar</Link>
-              ) : (
-                <button type="button" className="sidebar-subitem" disabled aria-disabled="true">
-                  Calificar
-                </button>
-              )}
+              <Link to="/tutoriales/categorias" className="sidebar-subitem">Banner</Link>
               {progresoPath ? (
                 <Link to={progresoPath} className="sidebar-subitem">Progreso</Link>
               ) : (
@@ -310,7 +302,6 @@ const Sidebar = () => {
             <img className="sidebar-profile-avatar" src={login0xnx} alt="Usuario" />
             <div className="sidebar-profile-meta">
               <span className="sidebar-profile-name">{displayName}</span>
-              <span className="sidebar-profile-email">{displayEmail}</span>
             </div>
             <span className="sidebar-profile-chevron" aria-hidden="true">
               <svg viewBox="0 0 24 24" role="img" focusable="false">

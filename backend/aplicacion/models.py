@@ -843,6 +843,7 @@ class Entrenamiento(models.Model):
         ],
         blank=True
     )
+    #xd
     requisitos_posteriores = models.TextField(blank=True)
     realizado = models.BooleanField(default=False)
 

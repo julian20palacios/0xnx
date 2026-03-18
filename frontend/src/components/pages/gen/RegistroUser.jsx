@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
-import { registrarUsuario } from '../../api/RegistroUser';
-import '../../styles/RegistroUser.css';
-import login0xnx from '../../assets/images/login0xnx.jpg';
-import { useAuth } from '../../context/AuthContext';
+import { registrarUsuario } from '../../../api/RegistroUser';
+import '../../../styles/RegistroUser.css';
+import login0xnx from '../../../assets/images/login0xnx.jpg';
+import { useAuth } from '../../../context/AuthContext';
 
 const RegistroUser = () => {
   const [form, setForm] = useState({
@@ -191,3 +191,5 @@ const RegistroUser = () => {
 };
 
 export default RegistroUser;
+
+

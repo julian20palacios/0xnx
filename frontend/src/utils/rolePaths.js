@@ -1,6 +1,6 @@
 export const getTutorialesPath = (role) => {
   if (role === "admin") return "/admin/tutoriales";
-  if (role === "user") return "/user/tutoriales";
+  if (role === "user") return "/tutoriales/categorias/general";
   return null;
 };
 

@@ -1,11 +1,12 @@
 import React, { useEffect, useMemo, useState } from 'react';
-import { obtenerEntrenamientos } from '../../../api/Entrenamiento';
+import { Link } from 'react-router-dom';
+import { obtenerEntrenamientos } from '../../../../api/Entrenamiento';
 import {
   actualizarComentarioTutorial,
   crearComentarioTutorial,
   obtenerComentariosTutorial,
-} from '../../../api/ComentariosTutorial';
-import { useAuth } from '../../../context/AuthContext';
+} from '../../../../api/ComentariosTutorial';
+import { useAuth } from '../../../../context/AuthContext';
 
 const EntrenamientoUser = () => {
   const [entrenamientos, setEntrenamientos] = useState([]);
@@ -123,6 +124,7 @@ const EntrenamientoUser = () => {
   return (
     <div>
       <h1>Entrenamientos</h1>
+      <Link to="/tutoriales/categorias">Volver</Link>
 
       {loading && <p>Cargando...</p>}
       {error && <p>{error}</p>}
